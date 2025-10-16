@@ -58,6 +58,10 @@ const MobileText = styled.span`
   @media (max-width: 768px) {
     display: inline-block; /* show "GDG" text on mobile */
   }
+  
+  @media (min-width: 769px) {
+    display: none; /* hide "GDG" text on desktop */
+  }
 `
 
 const MainText = styled.span`
