@@ -17,6 +17,7 @@ console.log('MONGODB_URI:', process.env.MONGODB_URI ? 'Loaded' : 'NOT LOADED');
 // Now import modules that need env vars
 import connectDB from './config/database.js';
 import './config/passport.js';
+import cronJobService from './services/cronJobService.js';
 
 // Import routes
 import authRoutes from './routes/auth.routes.js';
@@ -26,12 +27,16 @@ import userRoutes from './routes/user.routes.js';
 import studyJamRoutes from './routes/studyjam.routes.js';
 import teamRoutes from './routes/team.routes.js';
 import certificateRoutes from './routes/certificate.routes.js';
+import codingProfileRoutes from './routes/codingProfile.routes.js';
 
 // Initialize app
 const app = express();
 
 // Connect to database
 connectDB();
+
+// Initialize cron jobs
+cronJobService.init();
 
 // Middleware
 app.use(helmet());
@@ -67,6 +72,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/study-jams', studyJamRoutes);
 app.use('/api/teams', teamRoutes);
 app.use('/api/certificates', certificateRoutes);
+app.use('/api/coding-profiles', codingProfileRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

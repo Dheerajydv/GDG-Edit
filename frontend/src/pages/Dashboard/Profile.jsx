@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useAuth } from '../../contexts/useAuth';
 import { FiUser, FiMail, FiPhone, FiMapPin, FiCalendar, FiEdit2, FiSave, FiX } from 'react-icons/fi';
+import CodingProfiles from '../../components/CodingProfiles';
+import AddProfileModal from '../../components/AddProfileModal';
 
 const Container = styled.div`
   animation: fadeIn 0.5s ease;
@@ -287,6 +289,7 @@ const Profile = () => {
     branch: ''
   });
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -508,6 +511,26 @@ const Profile = () => {
           </Section>
         </ProfileBody>
       </ProfileCard>
+
+      {/* Coding Profiles Section */}
+      <ProfileCard>
+        <ProfileBody>
+          <CodingProfiles 
+            onAddProfile={() => setIsModalOpen(true)}
+            onEditProfile={() => setIsModalOpen(true)}
+          />
+        </ProfileBody>
+      </ProfileCard>
+
+      {/* Add Profile Modal */}
+      <AddProfileModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={() => {
+          // Optionally refresh the page or update state
+          window.location.reload();
+        }}
+      />
     </Container>
   );
 };

@@ -66,6 +66,82 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  codingProfiles: {
+    leetcode: {
+      username: {
+        type: String,
+        default: null,
+      },
+      rank: {
+        type: Number,
+        default: null,
+      },
+      rating: {
+        type: Number,
+        default: null,
+      },
+      problemsSolved: {
+        easy: {
+          type: Number,
+          default: 0,
+        },
+        medium: {
+          type: Number,
+          default: 0,
+        },
+        hard: {
+          type: Number,
+          default: 0,
+        },
+        total: {
+          type: Number,
+          default: 0,
+        },
+      },
+      lastUpdated: {
+        type: Date,
+        default: null,
+      },
+      verified: {
+        type: Boolean,
+        default: false,
+      },
+    },
+    codechef: {
+      username: {
+        type: String,
+        default: null,
+      },
+      stars: {
+        type: Number,
+        default: 0,
+      },
+      rating: {
+        type: Number,
+        default: null,
+      },
+      globalRank: {
+        type: Number,
+        default: null,
+      },
+      countryRank: {
+        type: Number,
+        default: null,
+      },
+      highestRating: {
+        type: Number,
+        default: null,
+      },
+      lastUpdated: {
+        type: Date,
+        default: null,
+      },
+      verified: {
+        type: Boolean,
+        default: false,
+      },
+    },
+  },
 }, {
   timestamps: true,
 });
@@ -100,6 +176,7 @@ userSchema.methods.toPublicJSON = function() {
     role: this.role,
     oauthProvider: this.oauthProvider,
     emailVerified: this.emailVerified,
+    codingProfiles: this.codingProfiles,
     createdAt: this.createdAt,
   };
 };
