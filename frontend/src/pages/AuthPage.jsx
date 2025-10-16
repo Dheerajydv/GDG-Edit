@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, EyeOff, Github as GitHub, Twitter, Mail, Camera, ChevronLeft, ChevronRight, Calendar, MapPin } from "lucide-react";
-import axios from "axios"; // Ensure axios is imported
+import axios from "axios";
 import { API_BASE_URL, API_ENDPOINTS } from "../config/api";
-import { useNavigate } from "react-router-dom"; // Ensure useNavigate is imported
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/useAuth";
-import { API_BASE_URL } from "../config/api";
 import {
   FormContainer,
   FormHeader,
@@ -378,12 +377,6 @@ const AuthPage = () => {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [emailConfirmed, setEmailConfirmed] = useState(false);
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 3e3f4b62919c83985b80c9b5e123d0630f7c5ae1
-  // Backend base URL comes from env via config/api.js
-
   // Fetch events for carousel
   useEffect(() => {
     const loadEvents = async () => {
@@ -481,13 +474,6 @@ const AuthPage = () => {
 
   const handleOAuthLogin = (provider) => {
     console.log('OAuth login initiated for:', provider);
-<<<<<<< HEAD
-
-    // Use API_BASE_URL from config (automatically switches between local and production)
-    window.location.href = `${API_BASE_URL}/api/auth/${provider}`;
-
-=======
->>>>>>> 3e3f4b62919c83985b80c9b5e123d0630f7c5ae1
     const endpoint = provider === 'google' ? API_ENDPOINTS.GOOGLE_AUTH : API_ENDPOINTS.GITHUB_AUTH;
     window.location.href = `${API_BASE_URL}${endpoint}`;
   };
