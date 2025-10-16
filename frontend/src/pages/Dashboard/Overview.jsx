@@ -24,7 +24,7 @@ const Header = styled.div`
 `;
 
 const WelcomeText = styled.h1`
-  color: white;
+  color: ${({ theme }) => theme.colors.text.primary};
   font-size: 2rem;
   margin-bottom: 0.5rem;
   font-weight: 700;
@@ -35,7 +35,7 @@ const WelcomeText = styled.h1`
 `;
 
 const SubText = styled.p`
-  color: rgba(255, 255, 255, 0.8);
+  color: ${({ theme }) => theme.colors.text.secondary};
   font-size: 1.1rem;
 `;
 
@@ -57,14 +57,13 @@ const StatsGrid = styled.div`
 `;
 
 const StatCard = styled.div`
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: #1c1c1c;
   border-radius: 16px;
   padding: 1.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
   transition: transform 0.3s ease;
 
   &:hover {
@@ -113,7 +112,7 @@ const StatInfo = styled.div`
 const StatValue = styled.div`
   font-size: 2rem;
   font-weight: 700;
-  color: #333;
+  color: ${({ theme }) => theme.colors.text.primary};
   margin-bottom: 0.25rem;
 
   @media (max-width: 768px) {
@@ -126,7 +125,7 @@ const StatValue = styled.div`
 `;
 
 const StatLabel = styled.div`
-  color: #666;
+  color: ${({ theme }) => theme.colors.text.secondary};
   font-size: 0.95rem;
 `;
 
@@ -146,11 +145,10 @@ const ContentGrid = styled.div`
 `;
 
 const Card = styled.div`
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: #1c1c1c;
   border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
 `;
 
 const CardHeader = styled.div`
@@ -162,19 +160,21 @@ const CardHeader = styled.div`
 
 const CardTitle = styled.h2`
   font-size: 1.25rem;
-  color: #333;
+  color: ${({ theme }) => theme.colors.text.primary};
   font-weight: 700;
 `;
 
 const ViewAllButton = styled.button`
   background: none;
   border: none;
-  color: #667eea;
+  color: ${({ theme }) => theme.colors.primary};
   font-weight: 600;
   cursor: pointer;
   font-size: 0.9rem;
 
   &:hover {
+    background: ${({ theme }) => theme.colors.primary};
+    color: black;
     text-decoration: underline;
   }
 `;
@@ -187,20 +187,21 @@ const EventList = styled.div`
 
 const EventItem = styled.div`
   padding: 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #1c1c1c;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   transition: all 0.3s ease;
   cursor: pointer;
 
   &:hover {
-    background: rgba(102, 126, 234, 0.05);
-    border-color: #667eea;
+    background: #222222;
+    border-color: ${({ theme }) => theme.colors.primary};
   }
 `;
 
 const EventTitle = styled.div`
   font-weight: 600;
-  color: #333;
+  color: ${({ theme }) => theme.colors.text.primary};
   margin-bottom: 0.5rem;
   font-size: 1.05rem;
 `;
@@ -209,7 +210,7 @@ const EventDetails = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  color: #666;
+  color: ${({ theme }) => theme.colors.text.secondary};
   font-size: 0.9rem;
 `;
 
@@ -230,7 +231,7 @@ const ActivityItem = styled.div`
   gap: 0.75rem;
   padding: 0.75rem;
   border-radius: 8px;
-  background: rgba(102, 126, 234, 0.05);
+  background: rgba(255, 255, 255, 0.04);
 `;
 
 const ActivityDot = styled.div`
@@ -246,13 +247,13 @@ const ActivityContent = styled.div`
 `;
 
 const ActivityText = styled.div`
-  color: #333;
+  color: ${({ theme }) => theme.colors.text.primary};
   font-size: 0.95rem;
   margin-bottom: 0.25rem;
 `;
 
 const ActivityTime = styled.div`
-  color: #999;
+  color: ${({ theme }) => theme.colors.text.secondary};
   font-size: 0.85rem;
 `;
 

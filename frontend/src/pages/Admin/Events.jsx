@@ -15,6 +15,7 @@ import {
   XCircle
 } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL, getAuthHeaders } from '../../utils/apiUtils';
 import CreateEventModal from './CreateEventModal';
 
 const Events = () => {
@@ -34,9 +35,8 @@ const Events = () => {
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/admin/events', {
-        headers: { Authorization: `Bearer ${token}` },
+      const response = await axios.get(`${API_BASE_URL}/api/admin/events`, {
+        headers: getAuthHeaders(),
         params: {
           page: pagination.page,
           limit: pagination.limit,
@@ -57,11 +57,10 @@ const Events = () => {
 
   const handleTogglePublish = async (eventId, currentStatus) => {
     try {
-      const token = localStorage.getItem('token');
       await axios.patch(
-        `http://localhost:5000/api/admin/events/${eventId}/publish`,
+        `${API_BASE_URL}/api/admin/events/${eventId}/publish`,
         { publish: !currentStatus },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: getAuthHeaders() }
       );
       fetchEvents();
     } catch (error) {
@@ -71,11 +70,10 @@ const Events = () => {
 
   const handleDuplicate = async (eventId) => {
     try {
-      const token = localStorage.getItem('token');
       await axios.post(
-        `http://localhost:5000/api/admin/events/${eventId}/duplicate`,
+        `${API_BASE_URL}/api/admin/events/${eventId}/duplicate`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: getAuthHeaders() }
       );
       fetchEvents();
     } catch (error) {
@@ -87,10 +85,9 @@ const Events = () => {
     if (!confirm('Are you sure you want to delete this event?')) return;
     
     try {
-      const token = localStorage.getItem('token');
       await axios.delete(
-        `http://localhost:5000/api/admin/events/${eventId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        `${API_BASE_URL}/api/admin/events/${eventId}`,
+        { headers: getAuthHeaders() }
       );
       fetchEvents();
     } catch (error) {

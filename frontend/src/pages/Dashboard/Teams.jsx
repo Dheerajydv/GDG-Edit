@@ -217,7 +217,7 @@ const EmptyState = styled.div`
   grid-column: 1 / -1;
   text-align: center;
   padding: 4rem 2rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: #1c1c1c;
   border-radius: 16px;
 `;
 

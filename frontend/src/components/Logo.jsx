@@ -29,11 +29,11 @@ const LogoImage = styled.img`
   }
   
   @media (max-width: 768px) {
-    height: 32px;
+    height: 40px; /* increased from 32px */
   }
   
   @media (max-width: 480px) {
-    height: 28px;
+    height: 36px; /* increased from 28px */
   }
 `
 
@@ -41,6 +41,23 @@ const LogoText = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
+  
+  @media (max-width: 768px) {
+    display: none; /* hide text beside logo on mobile */
+  }
+`
+
+const MobileText = styled.span`
+  display: none;
+  font-family: 'Google Sans', 'Product Sans', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: ${({theme})=>theme.colors.text.primary};
+  letter-spacing: -0.01em;
+  
+  @media (max-width: 768px) {
+    display: inline-block; /* show "GDG" text on mobile */
+  }
 `
 
 const MainText = styled.span`
@@ -97,6 +114,7 @@ export default function Logo() {
         <MainText>Google Developers Group</MainText>
         <SubText>On Campus Madan Mohan Malaviya University of Technology</SubText>
       </LogoText>
+      <MobileText>GDG</MobileText>
     </LogoContainer>
   )
 }

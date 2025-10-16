@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, EyeOff, Mail, Lock, User, Github as GitHub, Twitter, Camera, ChevronLeft, ChevronRight, Calendar, MapPin } from "lucide-react";
+import { Eye, EyeOff, Github as GitHub, Twitter, Mail, Camera, ChevronLeft, ChevronRight, Calendar, MapPin } from "lucide-react";
 import axios from "axios"; // Ensure axios is imported
+import { API_BASE_URL, API_ENDPOINTS } from "../config/api";
 import { useNavigate } from "react-router-dom"; // Ensure useNavigate is imported
 import { useAuth } from "../contexts/useAuth";
+import { API_BASE_URL } from "../config/api";
 import {
   FormContainer,
   FormHeader,
@@ -27,7 +29,7 @@ import {
   SocialButtonsContainer,
 } from "../components/FormElements";
 
-import Logo from "../components/Logo";
+ 
 import PasswordStrengthMeter from "../components/PasswordStrength";
 import ThemeToggle from "../components/ThemeToggle";
 import AnimatedParticles from "../components/AnimatedParticles";
@@ -37,19 +39,15 @@ const PageContainer = styled.div`
   min-height: 100vh;
   display: flex;
   align-items: stretch;
+  justify-content: center;
   position: relative;
+  padding: 24px;
   overflow: hidden;
-  
-  @media (max-width: 1024px) {
-    flex-direction: column;
-  }
+  gap: 24px;
 `;
 
 const LeftPanel = styled.div`
-  flex: 1;
-  background: linear-gradient(135deg, 
-    ${({ theme }) => theme.googleColors.blue.main} 0%, 
-    ${({ theme }) => theme.googleColors.blue.darker} 100%);
+  flex: 1 1 0;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -57,28 +55,8 @@ const LeftPanel = styled.div`
   align-items: center;
   padding: 3rem;
   overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 50px 50px;
-    animation: gridMove 20s linear infinite;
-  }
-  
-  @keyframes gridMove {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(50px, 50px); }
-  }
-  
-  @media (max-width: 1024px) {
-    min-height: 300px;
-    padding: 2rem;
-  }
+  border-radius: 16px;
+  background: transparent; /* removed blue background */
 `;
 
 const CarouselContainer = styled.div`
@@ -224,17 +202,133 @@ const Dot = styled.button`
 `;
 
 const RightPanel = styled.div`
-  flex: 1;
+  flex: 1 1 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+`;
+
+const AuthCard = styled.div`
+  width: 70%;
+  background: ${({ theme }) => theme.colors.background.tertiary};
+  border: none;
+  border-radius: 14px;
+  padding: 20px 40px; /* increased left/right padding */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+`;
+
+const FieldLabel = styled.label`
+  display: block;
+  font-size: 0.875rem;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  margin-bottom: 8px;
+`;
+
+const AuthInput = styled.input`
+  width: 100%;
+  height: 48px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
   background: ${({ theme }) => theme.colors.background.primary};
-  position: relative;
-  
-  @media (max-width: 1024px) {
-    padding: 2rem 1rem;
+  color: ${({ theme }) => theme.colors.text.primary};
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.text.secondary};
+    opacity: 0.9;
   }
+
+  &:focus {
+    border-color: ${({ theme }) => theme.googleColors.blue.primary};
+    box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.25);
+  }
+`;
+
+const EmailDisplay = styled.div`
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  font-size: 0.95rem;
+`;
+
+const InlineActions = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+`;
+
+const BackLink = styled.button`
+  background: none;
+  border: none;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none; /* no hover effect */
+`;
+
+const BackRow = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 6px 0;
+`;
+
+const PrimaryButton = styled.button`
+  width: 100%;
+  height: 44px;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #111;
+  font-weight: 600;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+
+  &:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
+  &:active { transform: translateY(0); }
+`;
+
+const OrDivider = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  font-size: 0.875rem;
+  margin: 16px 0;
+
+  &::before, &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: ${({ theme }) => theme.colors.border};
+  }
+`;
+
+const SocialBtn = styled.button`
+  width: 100%;
+  height: 44px;
+  border-radius: 10px;
+  background: ${({ theme }) => theme.colors.background.primary};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  color: ${({ theme }) => theme.colors.text.primary};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+
+  &:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(0,0,0,0.12); }
 `;
 
 const ThemeToggleWrapper = styled.div`
@@ -282,16 +376,17 @@ const AuthPage = () => {
   const [events, setEvents] = useState([]);
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [emailConfirmed, setEmailConfirmed] = useState(false);
 
-  // Updated to use new local backend
-  const API_BASE_URL = "http://localhost:5000";
+
+  // Backend base URL comes from env via config/api.js
 
   // Fetch events for carousel
   useEffect(() => {
     const loadEvents = async () => {
       try {
         const eventsData = await fetchEvents();
-        setEvents(eventsData.slice(0, 5)); // Get first 5 events
+        setEvents(eventsData); // Show all events instead of limiting to 5
       } catch (error) {
         console.error("Error loading events:", error);
       }
@@ -383,8 +478,12 @@ const AuthPage = () => {
 
   const handleOAuthLogin = (provider) => {
     console.log('OAuth login initiated for:', provider);
-    // Updated to use new local backend
-    window.location.href = `http://localhost:5000/api/auth/${provider}`;
+
+    // Use API_BASE_URL from config (automatically switches between local and production)
+    window.location.href = `${API_BASE_URL}/api/auth/${provider}`;
+
+    const endpoint = provider === 'google' ? API_ENDPOINTS.GOOGLE_AUTH : API_ENDPOINTS.GITHUB_AUTH;
+    window.location.href = `${API_BASE_URL}${endpoint}`;
   };
 
   const handleSubmit = async (e) => {
@@ -453,14 +552,19 @@ const AuthPage = () => {
   };
 
   const currentEvent = events[currentEventIndex];
+  const isEmailValid = /\S+@\S+\.\S+/.test(form.email);
+  const backToEmail = () => {
+    setEmailConfirmed(false);
+    setForm({ ...form, password: "" });
+  };
 
   return (
     <PageContainer>
       <ThemeToggleWrapper>
         <ThemeToggle />
       </ThemeToggleWrapper>
-      
-      {/* Left Panel - Events Carousel */}
+
+      {/* Left side image/carousel section */}
       <LeftPanel>
         <AnimatedParticles count={60} speed="medium" />
         <CarouselContainer>
@@ -473,7 +577,7 @@ const AuthPage = () => {
                 exit={{ opacity: 0, x: -100 }}
                 transition={{ duration: 0.5 }}
               >
-                <CarouselImage src={currentEvent.image || 'https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'} />
+                <CarouselImage src={currentEvent.image || currentEvent.images?.[0] || 'https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'} />
                 <CarouselContent>
                   <CarouselTitle>{currentEvent.title}</CarouselTitle>
                   <CarouselMeta>
@@ -505,15 +609,6 @@ const AuthPage = () => {
             <CarouselButton onClick={prevEvent} disabled={events.length === 0}>
               <ChevronLeft size={20} />
             </CarouselButton>
-            <CarouselDots>
-              {events.map((_, index) => (
-                <Dot
-                  key={index}
-                  active={index === currentEventIndex}
-                  onClick={() => goToEvent(index)}
-                />
-              ))}
-            </CarouselDots>
             <CarouselButton onClick={nextEvent} disabled={events.length === 0}>
               <ChevronRight size={20} />
             </CarouselButton>
@@ -521,178 +616,137 @@ const AuthPage = () => {
         </CarouselContainer>
       </LeftPanel>
 
-      {/* Right Panel - Auth Form */}
+      {/* Right side auth card */}
       <RightPanel>
-        <AnimatePresence mode="wait">
-          <FormContainer
-            key={isLogin ? "login" : "signup"}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={formVariants}
-            style={{ maxWidth: '500px', width: '100%' }}
-          >
+        <AuthCard>
           <FormHeader>
-            <motion.div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: "1rem",
-              }}
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Logo />
-            </motion.div>
-            <Title>{isLogin ? "Welcome back" : "Join the community"}</Title>
-            <Subtitle>
-              {isLogin
-                ? "Sign in to access your GDG account"
-                : "Create an account to join Google Developer Groups"}
-            </Subtitle>
+            <Title>Welcome back!!</Title>
           </FormHeader>
-          <Form onSubmit={handleSubmit}>
+
+          <form onSubmit={handleSubmit}>
             {!isLogin && (
-              <FormGroup>
-                <Label hasError={!!errors.name}>Full Name</Label>
-                <Input
+              <div style={{ marginBottom: 14 }}>
+                <FieldLabel>Full Name</FieldLabel>
+                <AuthInput
                   type="text"
                   name="name"
-                  placeholder="Enter your full name"
+                  placeholder="Your full name"
                   value={form.name}
                   onChange={handleChange}
-                  hasError={!!errors.name}
                 />
                 {errors.name && <ErrorMessage>{errors.name}</ErrorMessage>}
-              </FormGroup>
+              </div>
             )}
-            <FormGroup>
-              <Label hasError={!!errors.email}>Email</Label>
-              <Input
-                type="email"
-                name="email"
-                placeholder="Enter your email"
-                value={form.email}
-                onChange={handleChange}
-                hasError={!!errors.email}
-              />
-              {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
-            </FormGroup>
-            <FormGroup>
-              <Label hasError={!!errors.password}>Password</Label>
-              <PasswordWrapper >
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  placeholder={isLogin ? "Enter your password" : "Create a password"}
-                  value={form.password}
-                  onChange={handleChange}
-                  hasError={!!errors.password}
-                  style={{
-                    width: "100%",
-                  }}
-                />
-                <PasswordToggle
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </PasswordToggle>
-              </PasswordWrapper>
-              {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
-              {!isLogin && form.password && <PasswordStrengthMeter password={form.password} />}
-              {!isLogin && (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding: "1rem",
-                    gap: "0.2rem",
-                    border: "2px solid #c9c5c5",
-                    borderRadius: "0.2rem",
-                    marginTop: "1em"
-                  }}
-                >
-                  <Label
-                    htmlFor="file-input"
-                    style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}
-                  >
-                    <Camera />
-                    <span>Upload Your Profile Photo</span>
-                  </Label>
-                  <Input
-                    id="file-input"
-                    type="file"
-                    name="profilePhoto"
+
+            <AnimatePresence initial={false}>
+              {!emailConfirmed ? (
+                <motion.div key="email-input" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} style={{ marginBottom: 14 }}>
+                  <InlineActions>
+                    <FieldLabel>Email</FieldLabel>
+                    <span />
+                  </InlineActions>
+                  <AuthInput
+                    type="email"
+                    name="email"
+                    placeholder="Your email address"
+                    value={form.email}
                     onChange={handleChange}
                   />
-                  {errors.profilePhoto && <ErrorMessage>{errors.profilePhoto}</ErrorMessage>}
-                </div>
+                  {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
+                </motion.div>
+              ) : (
+                <motion.div key="email-static" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} style={{ marginBottom: 14 }}>
+                  <InlineActions>
+                    <FieldLabel>Email</FieldLabel>
+                    <span />
+                  </InlineActions>
+                  <EmailDisplay>{form.email}</EmailDisplay>
+                </motion.div>
               )}
-            </FormGroup>
-            {isLogin && (
-              <CheckboxContainer>
-                <Checkbox
-                  type="checkbox"
-                  id="rememberMe"
-                  name="rememberMe"
-                  checked={form.rememberMe}
-                  onChange={handleChange}
-                />
-                <CheckboxLabel htmlFor="rememberMe">Remember me</CheckboxLabel>
-              </CheckboxContainer>
+            </AnimatePresence>
+
+            {isLogin && emailConfirmed && (
+              <motion.div key="password-field" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} style={{ marginBottom: 14 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                  <FieldLabel>Password</FieldLabel>
+                  <a style={{ color: '#9aa0a6', fontSize: '0.875rem' }}>Forgot your password?</a>
+                </div>
+                <div style={{ position: 'relative' }}>
+                  <AuthInput
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    placeholder="Your password"
+                    value={form.password}
+                    onChange={handleChange}
+                  />
+                  <PasswordToggle
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    style={{ right: 10 }}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </PasswordToggle>
+                </div>
+                {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
+              </motion.div>
             )}
+
             {errors.api && (
-              <ErrorMessage style={{ textAlign: 'center', marginBottom: '1rem' }}>
+              <ErrorMessage style={{ textAlign: 'center', marginBottom: '0.75rem' }}>
                 {errors.api}
               </ErrorMessage>
             )}
-            <Button type="submit" disabled={loading}>
-              {loading ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}
-            </Button>
-            <Divider>
-              <span>or continue with</span>
-            </Divider>
-            <SocialButtonsContainer>
-              <SocialButton 
-                type="button" 
-                onClick={() => handleOAuthLogin("google")}
-              >
-                <GoogleIcon />
-                <span>Google</span>
-              </SocialButton>
-              <SocialButton 
-                type="button" 
-                onClick={() => handleOAuthLogin("github")}
-              >
-                <GitHub size={18} />
-                <span>GitHub</span>
-              </SocialButton>
-              <SocialButton 
-                type="button" 
-                onClick={() => handleOAuthLogin("twitter")}
-              >
-                <Twitter size={18} />
-                <span>Twitter</span>
-              </SocialButton>
-            </SocialButtonsContainer>
+
+            {!emailConfirmed ? (
+              <PrimaryButton type="button" disabled={loading || !isEmailValid} onClick={() => isEmailValid && setEmailConfirmed(true)}>
+                {loading ? 'Please wait...' : 'Continue'}
+              </PrimaryButton>
+            ) : (
+              <PrimaryButton type="submit" disabled={loading}>
+                {loading ? 'Please wait...' : isLogin ? 'Sign in' : 'Create account'}
+              </PrimaryButton>
+            )}
+
+            <OrDivider>OR</OrDivider>
+
+            {!emailConfirmed ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <SocialBtn type="button" onClick={() => handleOAuthLogin('google')}>
+                  <GoogleIcon /> Continue with Google
+                </SocialBtn>
+                <SocialBtn type="button" onClick={() => handleOAuthLogin('github')}>
+                  <GitHub size={18} /> Continue with GitHub
+                </SocialBtn>
+                <SocialBtn type="button" onClick={() => handleOAuthLogin('twitter')}>
+                  <Twitter size={18} color="#1DA1F2" /> Continue with Twitter
+                </SocialBtn>
+              </div>
+            ) : (
+              <div>
+                <SocialBtn type="button">
+                  <Mail size={18} /> Email sign-in code
+                </SocialBtn>
+              </div>
+            )}
+
+            {emailConfirmed && (
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: 12 }}>
+                <BackRow type="button" onClick={backToEmail}>
+                  <ChevronLeft size={16} />
+                  Go back
+                </BackRow>
+              </div>
+            )}
+
             <SwitchText>
               {isLogin ? "Don't have an account? " : "Already have an account? "}
-              <a 
-                onClick={toggleAuthMode}
-                style={{ cursor: 'pointer' }}
-              >
-                {isLogin ? "Sign up" : "Sign in"}
+              <a onClick={toggleAuthMode} style={{ cursor: 'pointer' }}>
+                {isLogin ? 'Sign up' : 'Sign in'}
               </a>
             </SwitchText>
-          </Form>
-        </FormContainer>
-      </AnimatePresence>
+          </form>
+        </AuthCard>
       </RightPanel>
     </PageContainer>
   );

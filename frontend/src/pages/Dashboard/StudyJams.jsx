@@ -43,8 +43,8 @@ const Subtitle = styled.p`
 `;
 
 const ProgressCard = styled.div`
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: #1c1c1c;
+  // backdrop-filter: blur(10px);
   border-radius: 16px;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -155,8 +155,8 @@ const ModulesGrid = styled.div`
 `;
 
 const ModuleCard = styled.div`
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: #1c1c1c;
+  // backdrop-filter: blur(10px);
   border-radius: 16px;
   padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -260,7 +260,7 @@ const Button = styled.button`
 const EmptyState = styled.div`
   text-align: center;
   padding: 4rem 2rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: #1c1c1c;
   border-radius: 16px;
 `;
 

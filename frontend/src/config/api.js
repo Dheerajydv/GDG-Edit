@@ -1,7 +1,9 @@
 // API Configuration
-// Change this URL when deploying to production
+// Automatically uses production URL when deployed to Vercel
+// For local development, uses localhost:5000
 
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+export const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL || 'http://localhost:5173';
 
 // API Endpoints
 export const API_ENDPOINTS = {

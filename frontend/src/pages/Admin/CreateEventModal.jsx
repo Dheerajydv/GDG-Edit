@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { X, Upload, Calendar, MapPin, Users, DollarSign } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL, getAuthHeaders } from '../../utils/apiUtils';
 
 const CreateEventModal = ({ show, onClose, onSuccess, editEvent = null }) => {
   const [formData, setFormData] = useState(editEvent || {
@@ -27,15 +28,14 @@ const CreateEventModal = ({ show, onClose, onSuccess, editEvent = null }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
       const url = editEvent 
-        ? `http://localhost:5000/api/admin/events/${editEvent._id}`
-        : 'http://localhost:5000/api/admin/events';
+        ? `${API_BASE_URL}/api/admin/events/${editEvent._id}`
+        : `${API_BASE_URL}/api/admin/events`;
       
       const method = editEvent ? 'put' : 'post';
       
       await axios[method](url, formData, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: getAuthHeaders()
       });
       
       onSuccess();

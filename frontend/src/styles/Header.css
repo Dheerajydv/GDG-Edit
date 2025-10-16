@@ -192,3 +192,10 @@ Rotating Cube
   background-color: rgba(15, 157, 88, 0.2);
   color: var(--secondary-color);
 }
+
+/* Hide rotating cube on mobile devices */
+@media (max-width: 768px) {
+  .rotating-cube {
+    display: none !important;
+  }
+}

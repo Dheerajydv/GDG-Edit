@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Users, Calendar, ClipboardCheck, Award, TrendingUp, TrendingDown } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL, getAuthHeaders } from '../../utils/apiUtils';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -13,9 +14,8 @@ const AdminDashboard = () => {
 
   const fetchDashboardStats = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/admin/dashboard/stats', {
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await axios.get(`${API_BASE_URL}/api/admin/dashboard/stats`, {
+        headers: getAuthHeaders()
       });
       setStats(response.data);
     } catch (error) {

@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { API_BASE_URL } from '../config/api.js';
 
-const API_URL = 'http://localhost:5000/api/events';
+const API_URL = `${API_BASE_URL}/api/events`;
 
 // Fetch all published events from the API
 export const fetchEvents = async () => {
@@ -25,12 +26,25 @@ export const fetchEvents = async () => {
       eventCategory: event.eventCategory,
       type: event.type
     }));
-    
+
+    // If API currently has too few events (e.g., development), backfill with mock events
+    if (!Array.isArray(events) || events.length < 3) {
+      // Merge and de-duplicate by id, prefer API events first
+      const combined = [...events, ...MOCK_EVENTS];
+      const seen = new Set();
+      const unique = combined.filter(evt => {
+        if (seen.has(evt.id)) return false;
+        seen.add(evt.id);
+        return true;
+      });
+      return unique;
+    }
+
     return events;
   } catch (error) {
     console.error('Error fetching events from API:', error);
-    // Return empty array on error
-    return [];
+    // Return mock events on error so UI still has content
+    return MOCK_EVENTS;
   }
 };
 

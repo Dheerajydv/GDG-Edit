@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/useAuth";
 import styled from "styled-components";
+import { API_BASE_URL } from "../config/api";
 
 const LoadingContainer = styled.div`
   min-height: 100vh;
@@ -42,6 +43,7 @@ const AuthCallback = () => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
     const error = params.get("error");
+    const redirect = params.get("redirect") || "/";
 
     if (error) {
       setMessage("Authentication failed. Redirecting...");
@@ -52,16 +54,13 @@ const AuthCallback = () => {
     }
 
     if (token) {
-      // Store token in localStorage
+      // Store token and complete login
       localStorage.setItem("token", token);
-      // Update auth context
-      login();
-      setMessage("Success! Redirecting to dashboard...");
-      
-      // Redirect to dashboard after brief delay
+      login(token);
+      setMessage("Success! Redirecting...");
       setTimeout(() => {
-        navigate("/dashboard");
-      }, 1000);
+        navigate(redirect);
+      }, 800);
     } else {
       setMessage("No authentication token received. Redirecting...");
       setTimeout(() => {

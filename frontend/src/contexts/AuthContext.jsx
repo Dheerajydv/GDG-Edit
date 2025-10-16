@@ -1,5 +1,7 @@
 import axios from "axios";
 import { createContext, useEffect, useReducer } from "react";
+import { API_BASE_URL } from "../config/api.js";
+
 const Authcontext = createContext();
 const getToken = () => localStorage.getItem("token");
 const getFileUrl = () => JSON.parse(localStorage.getItem("fileUrl")) || [];
@@ -43,9 +45,6 @@ function reducer(state, action) {
 }
 
 export default function AuthProvider({ children }) {
-  // Updated to use new local backend
-  const API_BASE_URL = "http://localhost:5000";
-
   const [{ user, isAuthenticated, loading, error, value, fileUrl,activeEvent }, dispatch] =
     useReducer(reducer, initialState);
 

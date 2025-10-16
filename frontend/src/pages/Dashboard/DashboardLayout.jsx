@@ -19,13 +19,13 @@ import {
 const DashboardContainer = styled.div`
   display: flex;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: ${({ theme }) => theme.colors.background.primary};
 `;
 
 const Sidebar = styled.aside`
   width: ${props => props.$isOpen ? '280px' : '0'};
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: ${({ theme }) => theme.colors.background.secondary};
+  color: ${({ theme }) => theme.colors.text.primary};
   position: fixed;
   left: 0;
   top: 0;
@@ -34,7 +34,7 @@ const Sidebar = styled.aside`
   overflow-x: hidden;
   transition: width 0.3s ease;
   z-index: 1000;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 0 24px rgba(0, 0, 0, 0.35);
 
   @media (max-width: 1024px) {
     width: ${props => props.$isOpen ? '280px' : '0'};
@@ -51,18 +51,18 @@ const Sidebar = styled.aside`
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.06);
   }
 
   &::-webkit-scrollbar-thumb {
-    background: rgba(102, 126, 234, 0.3);
+    background: rgba(255, 255, 255, 0.25);
     border-radius: 3px;
   }
 `;
 
 const SidebarHeader = styled.div`
   padding: 1.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -74,7 +74,44 @@ const Logo = styled.div`
   gap: 0.75rem;
   font-weight: bold;
   font-size: 1.25rem;
-  color: #667eea;
+  color: ${({ theme }) => theme.colors.text.primary};
+  cursor: pointer;
+  white-space: nowrap;
+  line-height: 1;
+  
+  span {
+    display: inline-block;
+  }
+
+  @media (max-width: 768px) {
+    span {
+      display: none; /* hide text beside logo on mobile */
+    }
+  }
+`;
+
+const LogoImage = styled.img`
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  display: block;
+  
+  @media (max-width: 768px) {
+    width: 40px; /* increased size */
+    height: 40px;
+  }
+`;
+
+const MobileText = styled.span`
+  display: none;
+  font-family: 'Google Sans', 'Product Sans', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text.primary};
+  
+  @media (max-width: 768px) {
+    display: inline-block; /* show "GDG" text on mobile */
+  }
 `;
 
 const CloseButton = styled.button`
@@ -83,7 +120,7 @@ const CloseButton = styled.button`
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #666;
+  color: ${({ theme }) => theme.colors.text.secondary};
   
   @media (max-width: 768px) {
     display: block;
@@ -99,20 +136,20 @@ const NavItem = styled(NavLink)`
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.5rem;
-  color: #666;
+  color: ${({ theme }) => theme.colors.text.secondary};
   text-decoration: none;
   transition: all 0.3s ease;
   border-left: 4px solid transparent;
 
   &:hover {
-    background: rgba(102, 126, 234, 0.1);
-    color: #667eea;
+    background: rgba(255, 255, 255, 0.06);
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 
   &.active {
-    background: rgba(102, 126, 234, 0.15);
-    color: #667eea;
-    border-left-color: #667eea;
+    background: rgba(255, 255, 255, 0.08);
+    color: ${({ theme }) => theme.colors.text.primary};
+    border-left-color: ${({ theme }) => theme.colors.primary};
     font-weight: 600;
   }
 
@@ -127,8 +164,8 @@ const UserSection = styled.div`
   left: 0;
   right: 0;
   padding: 1.5rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.5);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
 `;
 
 const UserInfo = styled.div`
@@ -142,11 +179,11 @@ const Avatar = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: ${({ theme }) => theme.colors.background.tertiary};
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: ${({ theme }) => theme.colors.text.primary};
   font-weight: bold;
   font-size: 1.1rem;
 `;
@@ -158,7 +195,7 @@ const UserDetails = styled.div`
 
 const UserName = styled.div`
   font-weight: 600;
-  color: #333;
+  color: ${({ theme }) => theme.colors.text.primary};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -166,7 +203,7 @@ const UserName = styled.div`
 
 const UserEmail = styled.div`
   font-size: 0.85rem;
-  color: #666;
+  color: ${({ theme }) => theme.colors.text.secondary};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -175,8 +212,8 @@ const UserEmail = styled.div`
 const LogoutButton = styled.button`
   width: 100%;
   padding: 0.75rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: ${({ theme }) => theme.colors.background.tertiary};
+  color: ${({ theme }) => theme.colors.text.primary};
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -189,6 +226,7 @@ const LogoutButton = styled.button`
 
   &:hover {
     transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
   }
 `;
 
@@ -204,13 +242,12 @@ const MainContent = styled.main`
 `;
 
 const TopBar = styled.div`
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: ${({ theme }) => theme.colors.background.secondary};
   padding: 1rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -221,7 +258,7 @@ const MenuButton = styled.button`
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #667eea;
+  color: ${({ theme }) => theme.colors.text.primary};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -230,7 +267,7 @@ const MenuButton = styled.button`
   transition: background 0.3s ease;
 
   &:hover {
-    background: rgba(102, 126, 234, 0.1);
+    background: rgba(255, 255, 255, 0.06);
   }
 `;
 
@@ -245,14 +282,14 @@ const NotificationButton = styled.button`
   border: none;
   font-size: 1.25rem;
   cursor: pointer;
-  color: #666;
+  color: ${({ theme }) => theme.colors.text.secondary};
   position: relative;
   padding: 0.5rem;
   border-radius: 8px;
   transition: background 0.3s ease;
 
   &:hover {
-    background: rgba(102, 126, 234, 0.1);
+    background: rgba(255, 255, 255, 0.06);
   }
 `;
 
@@ -307,7 +344,7 @@ const DashboardLayout = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/auth');
+    navigate('/');
   };
 
   const toggleSidebar = () => {
@@ -327,9 +364,10 @@ const DashboardLayout = () => {
     <DashboardContainer>
       <Sidebar $isOpen={sidebarOpen}>
         <SidebarHeader>
-          <Logo>
-            <span>🚀</span>
+          <Logo onClick={() => navigate('/')}> 
+            <LogoImage src="/gdg_logo.png" alt="GDG Logo" />
             <span>GDG MMMUT</span>
+            <MobileText>GDG</MobileText>
           </Logo>
           <CloseButton onClick={toggleSidebar}>
             <FiX />

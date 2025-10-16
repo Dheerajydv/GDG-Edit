@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Search, Download, UserPlus, MoreVertical, Ban, UserCheck, Trash2 } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL, getAuthHeaders } from '../../utils/apiUtils';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -17,9 +18,8 @@ const Users = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/admin/users', {
-        headers: { Authorization: `Bearer ${token}` },
+      const response = await axios.get(`${API_BASE_URL}/api/admin/users`, {
+        headers: getAuthHeaders(),
         params: {
           page: pagination.page,
           limit: pagination.limit,
@@ -38,11 +38,10 @@ const Users = () => {
 
   const handleSuspendUser = async (userId, suspend) => {
     try {
-      const token = localStorage.getItem('token');
       await axios.patch(
-        `http://localhost:5000/api/admin/users/${userId}/suspend`,
+        `${API_BASE_URL}/api/admin/users/${userId}/suspend`,
         { suspend, reason: 'Suspended by admin' },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: getAuthHeaders() }
       );
       fetchUsers();
     } catch (error) {
@@ -52,9 +51,8 @@ const Users = () => {
 
   const handleExportUsers = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/admin/users/export', {
-        headers: { Authorization: `Bearer ${token}` },
+      const response = await axios.get(`${API_BASE_URL}/api/admin/users/export`, {
+        headers: getAuthHeaders(),
         responseType: 'blob'
       });
       const url = window.URL.createObjectURL(new Blob([response.data]));

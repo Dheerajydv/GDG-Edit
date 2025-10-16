@@ -52,8 +52,7 @@ const StatsBar = styled.div`
 `;
 
 const StatCard = styled.div`
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: #1c1c1c;
   padding: 1.5rem;
   border-radius: 12px;
   text-align: center;
@@ -88,11 +87,10 @@ const CertificatesGrid = styled.div`
 `;
 
 const CertificateCard = styled.div`
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: #1c1c1c;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
   transition: transform 0.3s ease;
 
   &:hover {
@@ -181,7 +179,7 @@ const EmptyState = styled.div`
   grid-column: 1 / -1;
   text-align: center;
   padding: 4rem 2rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: #1c1c1c;
   border-radius: 16px;
 `;
 

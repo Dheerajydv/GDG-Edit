@@ -143,13 +143,9 @@ const ProfileButton = () => {
   function handleLogout(e) {
     e.preventDefault();
     logout();
-    window.location.href = '/auth';
+    window.location.href = '/';
   }
 
-  const handleDashboard = () => {
-    navigate('/dashboard');
-    setIsOpen(false);
-  };
 
   const handleProfile = () => {
     navigate('/dashboard/profile');
@@ -168,7 +164,6 @@ const ProfileButton = () => {
         </ProfilePhoto>
         <UserInfo>
           <UserName>{user?.name}</UserName>
-          <UserEmail>{user?.email}</UserEmail>
         </UserInfo>
         <ChevronDown 
           size={16}
@@ -187,10 +182,6 @@ const ProfileButton = () => {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
           >
-            <DropdownItem onClick={handleDashboard}>
-              <LayoutDashboard size={18} />
-              Dashboard
-            </DropdownItem>
             <DropdownItem onClick={handleProfile}>
               <User size={18} />
               My Profile
