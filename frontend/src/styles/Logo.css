@@ -1,0 +1,31 @@
+
+/*logo*/
+.logo-colors {
+  display: flex;
+  gap:4px;
+
+}
+
+.logo-colors span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: block;
+}
+
+.logo-blue {
+  background-color: #4285F4;
+}
+
+.logo-red {
+  background-color: #DB4437;
+}
+
+.logo-yellow {
+  background-color: #F4B400;
+}
+
+.logo-green {
+  background-color: #0F9D58;
+}
+/*done*/
