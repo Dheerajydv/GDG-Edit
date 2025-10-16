@@ -28,6 +28,8 @@ import studyJamRoutes from './routes/studyjam.routes.js';
 import teamRoutes from './routes/team.routes.js';
 import certificateRoutes from './routes/certificate.routes.js';
 import codingProfileRoutes from './routes/codingProfile.routes.js';
+import adminRoutes from './routes/admin.routes.js';
+import setupRoutes from './routes/setup.routes.js';
 
 // Initialize app
 const app = express();
@@ -47,6 +49,9 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve static files from public directory
+app.use(express.static('public'));
 
 // Session configuration
 app.use(session({
@@ -73,6 +78,8 @@ app.use('/api/study-jams', studyJamRoutes);
 app.use('/api/teams', teamRoutes);
 app.use('/api/certificates', certificateRoutes);
 app.use('/api/coding-profiles', codingProfileRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/setup', setupRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
