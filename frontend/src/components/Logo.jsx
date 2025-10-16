@@ -90,7 +90,7 @@ export default function Logo() {
   return (
     <LogoContainer href='/' className='logo'>
       <LogoImage 
-        src="/GDG-Logo.svg" 
+        src="/gdg_logo.png" 
         alt="GDG Logo"
       />
       <LogoText>
