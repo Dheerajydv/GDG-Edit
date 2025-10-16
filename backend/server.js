@@ -7,6 +7,8 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import session from 'express-session';
 import passport from 'passport';
+import contactRoutes from './routes/contact.routes.js';
+
 
 // Debug: Check if env vars are loaded
 console.log('🔍 ENV CHECK:');
@@ -80,6 +82,7 @@ app.use('/api/certificates', certificateRoutes);
 app.use('/api/coding-profiles', codingProfileRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/setup', setupRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
