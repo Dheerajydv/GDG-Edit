@@ -25,51 +25,6 @@
   background-color: var(--surface-elevated);
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  color: var(--text-primary);
-  font-weight: 700;
-  font-size: var(--font-size-xl);
-  letter-spacing: -0.5px;
-  transition: transform var(--transition-short);
-  gap: 0.5rem;
-}
-
-.logo:hover {
-  text-decoration: none;
-  transform: scale(1.05);
-}
-
-.logo-colors {
-  display: flex;
-  gap: 2px;
-}
-
-.logo-colors span {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  display: block;
-}
-
-.logo-blue {
-  background-color: #4285F4;
-}
-
-.logo-red {
-  background-color: #DB4437;
-}
-
-.logo-yellow {
-  background-color: #F4B400;
-}
-
-.logo-green {
-  background-color: #0F9D58;
-}
-
 .nav-links-desktop {
   display: flex;
   gap: var(--spacing-xl);

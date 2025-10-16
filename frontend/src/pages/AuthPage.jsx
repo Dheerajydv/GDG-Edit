@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, EyeOff, Mail, Lock, User, Github as GitHub, Twitter, Camera, } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, Github as GitHub, Twitter, Camera, ChevronLeft, ChevronRight, Calendar, MapPin } from "lucide-react";
 import axios from "axios"; // Ensure axios is imported
 import { useNavigate } from "react-router-dom"; // Ensure useNavigate is imported
 import { useAuth } from "../contexts/useAuth";
@@ -29,16 +29,219 @@ import {
 
 import Logo from "../components/Logo";
 import PasswordStrengthMeter from "../components/PasswordStrength";
-import AuthBackground from "../components/AuthBackground";
 import ThemeToggle from "../components/ThemeToggle";
+import AnimatedParticles from "../components/AnimatedParticles";
+import { fetchEvents } from "../utils/eventService";
 
 const PageContainer = styled.div`
   min-height: 100vh;
   display: flex;
+  align-items: stretch;
+  position: relative;
+  overflow: hidden;
+  
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+`;
+
+const LeftPanel = styled.div`
+  flex: 1;
+  background: linear-gradient(135deg, 
+    ${({ theme }) => theme.googleColors.blue.main} 0%, 
+    ${({ theme }) => theme.googleColors.blue.darker} 100%);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 20s linear infinite;
+  }
+  
+  @keyframes gridMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+  }
+  
+  @media (max-width: 1024px) {
+    min-height: 300px;
+    padding: 2rem;
+  }
+`;
+
+const CarouselContainer = styled.div`
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+  z-index: 1;
+`;
+
+const CarouselCard = styled(motion.div)`
+  background: ${({ theme }) => theme.colors.background.primary};
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  height: 450px;
+  position: relative;
+`;
+
+const CarouselImage = styled.div`
+  width: 100%;
+  height: 200px;
+  background-image: url(${props => props.src});
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to top, ${({ theme }) => theme.colors.background.primary}, transparent);
+  }
+`;
+
+const CarouselContent = styled.div`
+  padding: 2rem;
+  height: 250px;
+  overflow-y: auto;
+`;
+
+const CarouselTitle = styled.h3`
+  font-family: 'Google Sans', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin-bottom: 0.75rem;
+`;
+
+const CarouselMeta = styled.div`
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+`;
+
+const MetaItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  font-size: 0.875rem;
+  
+  svg {
+    color: ${({ theme }) => theme.googleColors.blue.main};
+  }
+`;
+
+const CarouselDescription = styled.p`
+  color: ${({ theme }) => theme.colors.text.secondary};
+  font-size: 0.95rem;
+  line-height: 1.6;
+`;
+
+const CarouselTags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+`;
+
+const Tag = styled.span`
+  background: ${({ theme }) => theme.googleColors.blue.light}20;
+  color: ${({ theme }) => theme.googleColors.blue.main};
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+`;
+
+const CarouselControls = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+  align-items: center;
+`;
+
+const CarouselButton = styled.button`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: ${({ theme }) => theme.colors.background.primary};
+  border: none;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: ${({ theme }) => theme.googleColors.blue.main};
+  
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+const CarouselDots = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const Dot = styled.button`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: ${({ active, theme }) => 
+    active ? theme.colors.background.primary : 'rgba(255, 255, 255, 0.4)'};
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.2);
+  }
+`;
+
+const RightPanel = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: ${({ theme }) => theme.colors.background.primary};
   position: relative;
+  
+  @media (max-width: 1024px) {
+    padding: 2rem 1rem;
+  }
+`;
+
+const ThemeToggleWrapper = styled.div`
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  z-index: 100;
 `;
 
 const GoogleIcon = () => (
@@ -76,9 +279,51 @@ const AuthPage = () => {
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [events, setEvents] = useState([]);
+  const [currentEventIndex, setCurrentEventIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   // Updated to use new local backend
   const API_BASE_URL = "http://localhost:5000";
+
+  // Fetch events for carousel
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        const eventsData = await fetchEvents();
+        setEvents(eventsData.slice(0, 5)); // Get first 5 events
+      } catch (error) {
+        console.error("Error loading events:", error);
+      }
+    };
+    loadEvents();
+  }, []);
+
+  // Auto-play carousel
+  useEffect(() => {
+    if (!isAutoPlaying || events.length === 0) return;
+    
+    const interval = setInterval(() => {
+      setCurrentEventIndex((prev) => (prev + 1) % events.length);
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, events.length]);
+
+  const nextEvent = () => {
+    setCurrentEventIndex((prev) => (prev + 1) % events.length);
+    setIsAutoPlaying(false);
+  };
+
+  const prevEvent = () => {
+    setCurrentEventIndex((prev) => (prev - 1 + events.length) % events.length);
+    setIsAutoPlaying(false);
+  };
+
+  const goToEvent = (index) => {
+    setCurrentEventIndex(index);
+    setIsAutoPlaying(false);
+  };
 
   const toggleAuthMode = () => {
     console.log('Toggling auth mode from', isLogin ? 'login' : 'register', 'to', !isLogin ? 'login' : 'register');
@@ -207,20 +452,86 @@ const AuthPage = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
   };
 
+  const currentEvent = events[currentEventIndex];
+
   return (
     <PageContainer>
-      <span style={{ position: "absolute", zIndex: "10", top: "3rem", right: "4rem" }}>
+      <ThemeToggleWrapper>
         <ThemeToggle />
-      </span>
-      <AuthBackground />
-      <AnimatePresence mode="wait">
-        <FormContainer
-          key={isLogin ? "login" : "signup"}
-          initial="hidden"
-          animate="visible"
-          exit="hidden"
-          variants={formVariants}
-        >
+      </ThemeToggleWrapper>
+      
+      {/* Left Panel - Events Carousel */}
+      <LeftPanel>
+        <AnimatedParticles count={60} speed="medium" />
+        <CarouselContainer>
+          <AnimatePresence mode="wait">
+            {currentEvent && (
+              <CarouselCard
+                key={currentEvent.id}
+                initial={{ opacity: 0, x: 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -100 }}
+                transition={{ duration: 0.5 }}
+              >
+                <CarouselImage src={currentEvent.image || 'https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'} />
+                <CarouselContent>
+                  <CarouselTitle>{currentEvent.title}</CarouselTitle>
+                  <CarouselMeta>
+                    <MetaItem>
+                      <Calendar size={16} />
+                      <span>{currentEvent.date}</span>
+                    </MetaItem>
+                    <MetaItem>
+                      <MapPin size={16} />
+                      <span>{currentEvent.location}</span>
+                    </MetaItem>
+                  </CarouselMeta>
+                  <CarouselDescription>
+                    {currentEvent.description}
+                  </CarouselDescription>
+                  {currentEvent.tags && (
+                    <CarouselTags>
+                      {currentEvent.tags.map((tag, index) => (
+                        <Tag key={index}>{tag}</Tag>
+                      ))}
+                    </CarouselTags>
+                  )}
+                </CarouselContent>
+              </CarouselCard>
+            )}
+          </AnimatePresence>
+          
+          <CarouselControls>
+            <CarouselButton onClick={prevEvent} disabled={events.length === 0}>
+              <ChevronLeft size={20} />
+            </CarouselButton>
+            <CarouselDots>
+              {events.map((_, index) => (
+                <Dot
+                  key={index}
+                  active={index === currentEventIndex}
+                  onClick={() => goToEvent(index)}
+                />
+              ))}
+            </CarouselDots>
+            <CarouselButton onClick={nextEvent} disabled={events.length === 0}>
+              <ChevronRight size={20} />
+            </CarouselButton>
+          </CarouselControls>
+        </CarouselContainer>
+      </LeftPanel>
+
+      {/* Right Panel - Auth Form */}
+      <RightPanel>
+        <AnimatePresence mode="wait">
+          <FormContainer
+            key={isLogin ? "login" : "signup"}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={formVariants}
+            style={{ maxWidth: '500px', width: '100%' }}
+          >
           <FormHeader>
             <motion.div
               style={{
@@ -382,6 +693,7 @@ const AuthPage = () => {
           </Form>
         </FormContainer>
       </AnimatePresence>
+      </RightPanel>
     </PageContainer>
   );
 };

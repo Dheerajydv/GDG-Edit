@@ -144,10 +144,8 @@ router.get('/profile', protect, async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
     
-    res.json({
-      success: true,
-      user: user.toPublicJSON(),
-    });
+    // Return user data directly (not nested in a user object)
+    res.json(user.toPublicJSON());
   } catch (error) {
     next(error);
   }

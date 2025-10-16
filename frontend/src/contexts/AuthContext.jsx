@@ -59,6 +59,8 @@ export default function AuthProvider({ children }) {
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      console.log('✅ User profile fetched:', response.data);
+      // Response.data is already the user object
       dispatch({ type: "setUser", payload: response.data });
     } catch (err) {
       console.error("Error fetching user profile:", err);

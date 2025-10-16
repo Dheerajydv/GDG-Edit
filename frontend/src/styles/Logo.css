@@ -1,31 +1,28 @@
 
-/*logo*/
-.logo-colors {
-  display: flex;
-  gap:4px;
-
+/* GDG Logo Styling */
+.logo {
+  text-decoration: none;
+  cursor: pointer;
 }
 
-.logo-colors span {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  display: block;
+/* Ensure Google Sans font is available */
+@font-face {
+  font-family: 'Google Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('https://fonts.gstatic.com/s/googlesans/v58/4Ua_rENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iqcsih3SAyH6cAwhX9RFD48TE63OOYKtrwEIJllpyk.woff2') format('woff2');
 }
 
-.logo-blue {
-  background-color: #4285F4;
+@font-face {
+  font-family: 'Google Sans';
+  font-style: normal;
+  font-weight: 500;
+  src: url('https://fonts.gstatic.com/s/googlesans/v58/4Ua_rENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iqcsih3SAyH6cAwhX9RFD48TE63OOYKtrwEIJlppik.woff2') format('woff2');
 }
 
-.logo-red {
-  background-color: #DB4437;
+@font-face {
+  font-family: 'Google Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('https://fonts.gstatic.com/s/googlesans/v58/4Ua_rENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iqcsih3SAyH6cAwhX9RFD48TE63OOYKtrwEIJkApik.woff2') format('woff2');
 }
-
-.logo-yellow {
-  background-color: #F4B400;
-}
-
-.logo-green {
-  background-color: #0F9D58;
-}
-/*done*/
