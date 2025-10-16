@@ -1,10 +1,41 @@
-// This is a mock service to simulate fetching events from an API
-export const fetchEvents = async () => {
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
+import axios from 'axios';
 
-  // Return mock data
-  return [
+const API_URL = 'http://localhost:5000/api/events';
+
+// Fetch all published events from the API
+export const fetchEvents = async () => {
+  try {
+    const response = await axios.get(API_URL);
+    
+    // Transform API data to match the expected format
+    const events = response.data.events.map(event => ({
+      id: event._id,
+      title: event.name,
+      description: event.description,
+      date: new Date(event.date).toISOString().split('T')[0], // Format: YYYY-MM-DD
+      time: event.time,
+      location: event.location,
+      image: event.image || 'https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      status: new Date(event.date) >= new Date() ? 'upcoming' : 'past',
+      tags: event.tags || [],
+      attendees: event.registeredCount || 0,
+      capacity: event.capacity,
+      registrationOpen: event.registrationOpen,
+      registrationDeadline: event.registrationDeadline,
+      eventCategory: event.eventCategory,
+      type: event.type
+    }));
+    
+    return events;
+  } catch (error) {
+    console.error('Error fetching events from API:', error);
+    // Return empty array on error
+    return [];
+  }
+};
+
+// MOCK DATA BACKUP (for reference/fallback)
+const MOCK_EVENTS = [
     {
       id: '16',
       title: 'Induction 2025 – Your GDG Journey Begins',
@@ -169,7 +200,5 @@ export const fetchEvents = async () => {
       tags: ["Blockchain", "Development", "Web 3.0"],
       image: 'https://images.pexels.com/photos/7103/writing-notes-idea-conference.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
       status: "upcoming"
-    },
-
+    }
   ];
-};

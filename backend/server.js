@@ -7,6 +7,8 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import session from 'express-session';
 import passport from 'passport';
+import contactRoutes from './routes/contact.routes.js';
+
 
 // Debug: Check if env vars are loaded
 console.log('🔍 ENV CHECK:');
@@ -17,6 +19,7 @@ console.log('MONGODB_URI:', process.env.MONGODB_URI ? 'Loaded' : 'NOT LOADED');
 // Now import modules that need env vars
 import connectDB from './config/database.js';
 import './config/passport.js';
+import cronJobService from './services/cronJobService.js';
 
 // Import routes
 import authRoutes from './routes/auth.routes.js';
@@ -26,12 +29,18 @@ import userRoutes from './routes/user.routes.js';
 import studyJamRoutes from './routes/studyjam.routes.js';
 import teamRoutes from './routes/team.routes.js';
 import certificateRoutes from './routes/certificate.routes.js';
+import codingProfileRoutes from './routes/codingProfile.routes.js';
+import adminRoutes from './routes/admin.routes.js';
+import setupRoutes from './routes/setup.routes.js';
 
 // Initialize app
 const app = express();
 
 // Connect to database
 connectDB();
+
+// Initialize cron jobs
+cronJobService.init();
 
 // Middleware
 app.use(helmet());
@@ -42,6 +51,9 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve static files from public directory
+app.use(express.static('public'));
 
 // Session configuration
 app.use(session({
@@ -67,6 +79,10 @@ app.use('/api/users', userRoutes);
 app.use('/api/study-jams', studyJamRoutes);
 app.use('/api/teams', teamRoutes);
 app.use('/api/certificates', certificateRoutes);
+app.use('/api/coding-profiles', codingProfileRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/setup', setupRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

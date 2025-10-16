@@ -24,6 +24,16 @@ const Certificates = lazy(() => import('./pages/Dashboard/Certificates'));
 const Profile = lazy(() => import('./pages/Dashboard/Profile'));
 const Teams = lazy(() => import('./pages/Dashboard/Teams'));
 const StudyJams = lazy(() => import('./pages/Dashboard/StudyJams'));
+
+// Admin components
+const AdminRoute = lazy(() => import('./pages/Admin/AdminRoute'));
+const AdminLayout = lazy(() => import('./pages/Admin/AdminLayout'));
+const AdminDashboard = lazy(() => import('./pages/Admin/Dashboard'));
+const AdminUsers = lazy(() => import('./pages/Admin/Users'));
+const AdminEvents = lazy(() => import('./pages/Admin/Events'));
+const AdminRegistrations = lazy(() => import('./pages/Admin/Registrations'));
+const AdminNotifications = lazy(() => import('./pages/Admin/Notifications'));
+
 const FollowCursor =lazy(()=>import('./components/FollowCursor'));
 
 function App() {
@@ -62,6 +72,19 @@ function App() {
                <Route path="teams" element={<Teams />} />
                <Route path="certificates" element={<Certificates />} />
                <Route path="profile" element={<Profile />} />
+             </Route>
+
+             {/* Admin Routes */}
+             <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
+               <Route index element={<AdminDashboard />} />
+               <Route path="users" element={<AdminUsers />} />
+               <Route path="events" element={<AdminEvents />} />
+               <Route path="registrations" element={<AdminRegistrations />} />
+               <Route path="notifications" element={<AdminNotifications />} />
+               <Route path="certificates" element={<div style={{padding: '24px'}}>Certificates - Coming Soon</div>} />
+               <Route path="teams" element={<div style={{padding: '24px'}}>Teams - Coming Soon</div>} />
+               <Route path="analytics" element={<div style={{padding: '24px'}}>Analytics - Coming Soon</div>} />
+               <Route path="settings" element={<div style={{padding: '24px'}}>Settings - Coming Soon</div>} />
              </Route>
           </Routes>
     </StyledThemeProvider>
