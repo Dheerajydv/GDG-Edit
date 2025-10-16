@@ -384,7 +384,7 @@ const AuthPage = () => {
     const loadEvents = async () => {
       try {
         const eventsData = await fetchEvents();
-        setEvents(eventsData.slice(0, 5)); // Get first 5 events
+        setEvents(eventsData); // Show all events instead of limiting to 5
       } catch (error) {
         console.error("Error loading events:", error);
       }

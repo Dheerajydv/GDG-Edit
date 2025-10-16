@@ -82,10 +82,7 @@ const NavActions = styled.div`
   gap: 0.5rem;
 
   @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: center;
-    margin-top: 1rem;
-    width: 100%;
+    display: none; /* move actions inside menu on mobile */
   }
 `;
 
@@ -98,7 +95,7 @@ const MenuButton = styled.button`
   z-index: 100;
 
   @media (max-width: 768px) {
-    display: block;
+    display: block; /* show hamburger on mobile */
   }
 `;
 const Button = styled.button`
@@ -194,15 +191,23 @@ const Header = () => {
         <NavLink href="/team" onClick={closeMenu}>Team</NavLink>
         <NavLink href="/#sponsors" onClick={closeMenu}>Sponsor</NavLink>
         <NavLink href="/#contact" onClick={closeMenu}>Contact</NavLink>
-        {isAuthenticated && (
-          <NavLink href="/dashboard" onClick={closeMenu}>Dashboard</NavLink>
-        )}
+        {/* Dashboard link removed as requested */}
 
         {isAuthenticated && (
           <Profile>
             <ProfileButton />
           </Profile>
         )}
+
+        {/* Mobile-only actions inside slideout */}
+        {!isAuthenticated && (
+          <Link to="/auth" onClick={closeMenu}>
+            <Button style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>SignIn/SignUp</Button>
+          </Link>
+        )}
+        <div style={{ marginTop: 8 }}>
+          <ThemeToggle toggle={toggleTheme} />
+        </div>
       </Nav>
 
       <NavActions>

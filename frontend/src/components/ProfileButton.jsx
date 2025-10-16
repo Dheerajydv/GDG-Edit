@@ -143,7 +143,7 @@ const ProfileButton = () => {
   function handleLogout(e) {
     e.preventDefault();
     logout();
-    window.location.href = '/auth';
+    window.location.href = '/';
   }
 
 

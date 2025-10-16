@@ -251,11 +251,7 @@ const EmptyState = styled.div`
   padding: 3rem 1rem;
   color: ${({ theme }) => theme.colors.text.secondary};
   
-  svg {
-    margin-bottom: 1rem;
-    opacity: 0.5;
-  }
-  
+  /* Keep paragraph centered, but header will handle icon/text layout */
   h3 {
     font-size: 1.25rem;
     font-weight: 600;
@@ -265,6 +261,19 @@ const EmptyState = styled.div`
   
   p {
     margin: 0 0 1.5rem 0;
+  }
+`;
+
+const EmptyHeader = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+
+  svg {
+    margin: 0; /* remove bottom margin to align vertically */
+    opacity: 0.5;
   }
 `;
 
@@ -392,18 +401,11 @@ const CodingProfiles = ({ onAddProfile, onEditProfile }) => {
 
       {!hasAnyProfile ? (
         <EmptyState>
-          <Trophy size={64} />
-          <h3>No Coding Profiles Yet</h3>
+          <EmptyHeader>
+            <Trophy size={64} />
+            <h3>No Coding Profiles Yet</h3>
+          </EmptyHeader>
           <p>Add your LeetCode or CodeChef username to showcase your competitive programming skills!</p>
-          <Button
-            $variant="primary"
-            onClick={() => onAddProfile && onAddProfile()}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Plus size={18} />
-            Add Your First Profile
-          </Button>
         </EmptyState>
       ) : (
         <ProfilesGrid>

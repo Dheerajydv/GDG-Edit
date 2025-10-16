@@ -8,6 +8,7 @@ import AddProfileModal from '../../components/AddProfileModal';
 
 const Container = styled.div`
   animation: fadeIn 0.5s ease;
+  color: ${({ theme }) => theme.colors.text.primary};
 
   @keyframes fadeIn {
     from {
@@ -26,28 +27,27 @@ const Header = styled.div`
 `;
 
 const Title = styled.h1`
-  color: white;
+  color: ${({ theme }) => theme.colors.text.primary};
   font-size: 2rem;
   margin-bottom: 0.5rem;
   font-weight: 700;
 `;
 
 const Subtitle = styled.p`
-  color: rgba(255, 255, 255, 0.8);
+  color: ${({ theme }) => theme.colors.text.secondary};
   font-size: 1.1rem;
 `;
 
 const ProfileCard = styled.div`
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: #1c1c1c;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
   margin-bottom: 2rem;
 `;
 
 const ProfileHeader = styled.div`
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: ${({ theme }) => theme.colors.background.tertiary};
   padding: 2rem;
   display: flex;
   align-items: center;
@@ -67,14 +67,14 @@ const Avatar = styled.div`
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: white;
+  background: ${({ theme }) => theme.colors.background.primary};
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 3rem;
   font-weight: bold;
-  color: #667eea;
-  border: 5px solid rgba(255, 255, 255, 0.3);
+  color: ${({ theme }) => theme.colors.text.primary};
+  border: 5px solid rgba(255, 255, 255, 0.08);
   background-image: ${props => props.$image ? `url(${props.$image})` : 'none'};
   background-size: cover;
   background-position: center;
@@ -87,15 +87,15 @@ const EditAvatarButton = styled.button`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: white;
+  background: ${({ theme }) => theme.colors.background.primary};
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #667eea;
+  color: ${({ theme }) => theme.colors.text.primary};
   font-size: 1.1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
   transition: transform 0.2s ease;
 
   &:hover {
@@ -105,7 +105,7 @@ const EditAvatarButton = styled.button`
 
 const ProfileInfo = styled.div`
   flex: 1;
-  color: white;
+  color: ${({ theme }) => theme.colors.text.primary};
 `;
 
 const ProfileName = styled.h2`
@@ -155,7 +155,7 @@ const SectionHeader = styled.div`
 `;
 
 const SectionTitle = styled.h3`
-  color: #333;
+  color: ${({ theme }) => theme.colors.text.primary};
   font-size: 1.25rem;
   font-weight: 700;
 `;
@@ -199,11 +199,11 @@ const InfoIcon = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: rgba(102, 126, 234, 0.1);
+  background: rgba(255, 255, 255, 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #667eea;
+  color: ${({ theme }) => theme.colors.text.secondary};
   font-size: 1.2rem;
   flex-shrink: 0;
 `;
@@ -213,7 +213,7 @@ const InfoContent = styled.div`
 `;
 
 const InfoLabel = styled.div`
-  color: #999;
+  color: ${({ theme }) => theme.colors.text.secondary};
   font-size: 0.85rem;
   margin-bottom: 0.25rem;
   text-transform: uppercase;
@@ -221,7 +221,7 @@ const InfoLabel = styled.div`
 `;
 
 const InfoValue = styled.div`
-  color: #333;
+  color: ${({ theme }) => theme.colors.text.primary};
   font-size: 1rem;
   font-weight: 600;
 `;
@@ -229,16 +229,16 @@ const InfoValue = styled.div`
 const Input = styled.input`
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid ${props => props.$error ? '#f43f5e' : 'rgba(0, 0, 0, 0.1)'};
+  border: 2px solid ${props => props.$error ? '#f43f5e' : 'rgba(255, 255, 255, 0.08)'};
   border-radius: 8px;
   font-size: 1rem;
-  color: #333;
-  background: white;
+  color: ${({ theme }) => theme.colors.text.primary};
+  background: ${({ theme }) => theme.colors.background.primary};
   transition: border-color 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: ${({ theme }) => theme.colors.primary};
   }
 `;
 
@@ -247,7 +247,7 @@ const Actions = styled.div`
   gap: 1rem;
   justify-content: flex-end;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 
   @media (max-width: 480px) {
     flex-direction: column;
@@ -261,10 +261,10 @@ const Actions = styled.div`
 const Button = styled.button`
   padding: 0.75rem 1.5rem;
   background: ${props => props.$variant === 'primary' 
-    ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' 
+    ? ({ theme }) => theme.colors.background.tertiary 
     : 'transparent'};
-  color: ${props => props.$variant === 'primary' ? 'white' : '#667eea'};
-  border: ${props => props.$variant === 'primary' ? 'none' : '2px solid #667eea'};
+  color: ${props => props.$variant === 'primary' ? ({ theme }) => theme.colors.text.primary : ({ theme }) => theme.colors.text.secondary};
+  border: ${props => props.$variant === 'primary' ? 'none' : '2px solid rgba(255,255,255,0.12)'};
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
@@ -275,6 +275,7 @@ const Button = styled.button`
 
   &:hover {
     transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.35);
   }
 `;
 

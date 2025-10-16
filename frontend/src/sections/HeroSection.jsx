@@ -31,13 +31,7 @@ const HeroSection = () => {
        className="hero-container"
       >
         <div className={`hero-content ${isVisible ? 'visible' : ''}`}>
-          <div
-            style={{
-              marginLeft: "2em",
-              paddingLeft: "2em"
-            }} 
-            className="hero-text"
-          >
+          <div className="hero-text">
             <h1>Google Developer Group</h1>
             <h2>on Campus MMMUT</h2>
             <p>Developing Together a Better Tomorrow</p>
