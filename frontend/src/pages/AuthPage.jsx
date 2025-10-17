@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Eye, EyeOff, Github as GitHub, Twitter, Mail, Camera, ChevronLeft, ChevronRight, Calendar, MapPin } from "lucide-react";
 import axios from "axios";
 import { API_BASE_URL, API_ENDPOINTS } from "../config/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import Logo from "../components/Logo";
 import { useAuth } from "../contexts/useAuth";
 import {
   FormContainer,
@@ -43,6 +44,11 @@ const PageContainer = styled.div`
   padding: 24px;
   overflow: hidden;
   gap: 24px;
+  
+  @media (max-width: 768px) {
+    padding: 16px;
+    gap: 12px;
+  }
 `;
 
 const LeftPanel = styled.div`
@@ -56,6 +62,10 @@ const LeftPanel = styled.div`
   overflow: hidden;
   border-radius: 16px;
   background: transparent; /* removed blue background */
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const CarouselContainer = styled.div`
@@ -63,6 +73,7 @@ const CarouselContainer = styled.div`
   max-width: 600px;
   position: relative;
   z-index: 1;
+  margin-top: 12px; /* nudge the image/card a bit down */
 `;
 
 const CarouselCard = styled(motion.div)`
@@ -70,8 +81,9 @@ const CarouselCard = styled(motion.div)`
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  height: 450px;
   position: relative;
+  display: flex;
+  flex-direction: column;
 `;
 
 const CarouselImage = styled.div`
@@ -95,8 +107,8 @@ const CarouselImage = styled.div`
 
 const CarouselContent = styled.div`
   padding: 2rem;
-  height: 250px;
-  overflow-y: auto;
+  /* Let content size naturally and remove scrollbars */
+  overflow: visible;
 `;
 
 const CarouselTitle = styled.h3`
@@ -205,6 +217,10 @@ const RightPanel = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  @media (max-width: 768px) {
+    flex: 1 1 auto;
+  }
 `;
 
 const AuthCard = styled.div`
@@ -214,6 +230,15 @@ const AuthCard = styled.div`
   border-radius: 14px;
   padding: 20px 40px; /* increased left/right padding */
   box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  
+  @media (max-width: 1024px) {
+    width: 85%;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 16px;
+  }
 `;
 
 const FieldLabel = styled.label`
@@ -335,6 +360,23 @@ const ThemeToggleWrapper = styled.div`
   top: 2rem;
   right: 2rem;
   z-index: 100;
+  
+  @media (max-width: 768px) {
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+`;
+
+const BrandWrapper = styled.div`
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  z-index: 100;
+
+  @media (max-width: 768px) {
+    top: 0.75rem;
+    left: 0.75rem;
+  }
 `;
 
 const GoogleIcon = () => (
@@ -376,6 +418,28 @@ const AuthPage = () => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [emailConfirmed, setEmailConfirmed] = useState(false);
+  
+  // Provide instant default slides so the carousel shows immediately
+  const defaultSlides = [
+    {
+      id: "default-1",
+      title: "Welcome to GDG",
+      date: "",
+      location: "",
+      description: "Discover events, connect with developers, and grow your skills.",
+      image: "https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&h=480",
+      tags: ["Community", "Events", "Learning"],
+    },
+    {
+      id: "default-2",
+      title: "Build with Us",
+      date: "",
+      location: "",
+      description: "From web to AI, explore hands-on sessions and workshops.",
+      image: "https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg?auto=compress&cs=tinysrgb&h=480",
+      tags: ["Web", "Cloud", "AI"],
+    },
+  ];
 
   // Fetch events for carousel
   useEffect(() => {
@@ -390,24 +454,37 @@ const AuthPage = () => {
     loadEvents();
   }, []);
 
-  // Auto-play carousel
+  // Determine slides (defaults shown instantly until events load)
+  const slides = events.length > 0 ? events : defaultSlides;
+
+  // Preload slide images and auto-play
   useEffect(() => {
-    if (!isAutoPlaying || events.length === 0) return;
-    
+    if (slides.length === 0) return;
+
+    // Preload all images for smooth transitions
+    slides.forEach((s) => {
+      const src = s.image || s.images?.[0];
+      if (!src) return;
+      const img = new Image();
+      img.src = src;
+    });
+
+    if (!isAutoPlaying) return;
+
     const interval = setInterval(() => {
-      setCurrentEventIndex((prev) => (prev + 1) % events.length);
+      setCurrentEventIndex((prev) => (prev + 1) % slides.length);
     }, 5000);
-    
+
     return () => clearInterval(interval);
-  }, [isAutoPlaying, events.length]);
+  }, [slides, isAutoPlaying]);
 
   const nextEvent = () => {
-    setCurrentEventIndex((prev) => (prev + 1) % events.length);
+    setCurrentEventIndex((prev) => (prev + 1) % slides.length);
     setIsAutoPlaying(false);
   };
 
   const prevEvent = () => {
-    setCurrentEventIndex((prev) => (prev - 1 + events.length) % events.length);
+    setCurrentEventIndex((prev) => (prev - 1 + slides.length) % slides.length);
     setIsAutoPlaying(false);
   };
 
@@ -543,7 +620,7 @@ const AuthPage = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
   };
 
-  const currentEvent = events[currentEventIndex];
+  const currentEvent = slides[currentEventIndex];
   const isEmailValid = /\S+@\S+\.\S+/.test(form.email);
   const backToEmail = () => {
     setEmailConfirmed(false);
@@ -552,6 +629,9 @@ const AuthPage = () => {
 
   return (
     <PageContainer>
+      <BrandWrapper>
+        <Logo />
+      </BrandWrapper>
       <ThemeToggleWrapper>
         <ThemeToggle />
       </ThemeToggleWrapper>
@@ -598,10 +678,10 @@ const AuthPage = () => {
           </AnimatePresence>
           
           <CarouselControls>
-            <CarouselButton onClick={prevEvent} disabled={events.length === 0}>
+            <CarouselButton onClick={prevEvent} disabled={slides.length === 0}>
               <ChevronLeft size={20} />
             </CarouselButton>
-            <CarouselButton onClick={nextEvent} disabled={events.length === 0}>
+            <CarouselButton onClick={nextEvent} disabled={slides.length === 0}>
               <ChevronRight size={20} />
             </CarouselButton>
           </CarouselControls>
