@@ -27,24 +27,49 @@ export const fetchEvents = async () => {
       type: event.type
     }));
 
-    // If API currently has too few events (e.g., development), backfill with mock events
-    if (!Array.isArray(events) || events.length < 3) {
-      // Merge and de-duplicate by id, prefer API events first
-      const combined = [...events, ...MOCK_EVENTS];
-      const seen = new Set();
-      const unique = combined.filter(evt => {
-        if (seen.has(evt.id)) return false;
-        seen.add(evt.id);
-        return true;
-      });
-      return unique;
-    }
-
     return events;
   } catch (error) {
     console.error('Error fetching events from API:', error);
-    // Return mock events on error so UI still has content
-    return MOCK_EVENTS;
+    // Return empty array if API fails
+    return [];
+  }
+};
+
+// Register for an event
+export const registerForEvent = async (eventId, formData, token) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/api/registrations`,
+      { eventId, formData },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error registering for event:', error);
+    throw error.response?.data || { message: 'Failed to register for event' };
+  }
+};
+
+// Get user's registered events
+export const getMyRegistrations = async (token) => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/api/registrations/my-events`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching registrations:', error);
+    throw error;
   }
 };
 

@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import '../styles/RegisterModal.css';
 import styled from 'styled-components';
 import axios from 'axios';
+import { API_BASE_URL } from '../config/api';
 
 const ModalOverlay=styled.div`
   position: fixed;
@@ -195,23 +196,51 @@ const RegisterModal = ( {event, onClose} ) => {
     }
   };
 
- const handleSubmit = async () => {
+const handleSubmit = async () => {
   if (validateStep(step)) {
     setIsSubmitting(true);
 
     try {
-      console.log("hi")
-      const response = await axios.post(`http://localhost:5000/api/registrations`, formData);
-      console.log("Response from server:", response.data);
-      if (!response.ok) {
-        throw new Error('Failed to register');
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        alert('Please login to register for events');
+        window.location.href = '/auth';
+        return;
       }
+
+      const registrationData = {
+        eventId: event.id,
+        formData: {
+          fullName: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          college: formData.college,
+          year: formData.year,
+          branch: formData.branch,
+          reason: formData.reason
+        }
+      };
+
+      const response = await axios.post(
+        `${API_BASE_URL}/api/registrations`,
+        registrationData,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      console.log("Registration successful:", response.data);
       setSubmitted(true);
     } catch (error) {
       console.error('Registration error:', error);
-      alert('An error occurred during registration. Please try again.');
+      const errorMessage = error.response?.data?.message || 'An error occurred during registration. Please try again.';
+      alert(errorMessage);
     } finally {
-      setIsSubmitting()
+      setIsSubmitting(false);
     }
   }
 };

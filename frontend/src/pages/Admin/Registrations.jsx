@@ -32,9 +32,8 @@ const Registrations = () => {
 
   const fetchEvents = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/admin/events', {
-        headers: { Authorization: `Bearer ${token}` },
+      const response = await axios.get(`${window.location.origin.includes('localhost') ? 'http://localhost:5000' : 'https://gdg-backend-ten.vercel.app'}/api/admin/events`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         params: { limit: 100 }
       });
       setEvents(response.data.events);
@@ -46,8 +45,8 @@ const Registrations = () => {
   const fetchRegistrations = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/admin/registrations', {
+      const response = await axios.get(`${window.location.origin.includes('localhost') ? 'http://localhost:5000' : 'https://gdg-backend-ten.vercel.app'}/api/admin/registrations`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         headers: { Authorization: `Bearer ${token}` },
         params: {
           page: pagination.page,

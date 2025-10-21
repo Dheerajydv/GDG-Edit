@@ -8,6 +8,9 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "seed": "node scripts/seed.js",
+    "seed-events": "node seedEvents.js",
+    "seed-events-clear": "node seedEvents.js 1",
+    "seed-events-update": "node seedEvents.js 3",
     "create-admin": "node scripts/createAdmin.js",
     "quick-admin": "node scripts/quickAdmin.js"
   },
