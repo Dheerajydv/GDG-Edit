@@ -32,7 +32,7 @@ export const getAllEvents = async (req, res) => {
 
     if (type) filter.type = type;
     if (mode || eventCategory) filter.eventCategory = mode || eventCategory;
-    if (published !== undefined) filter.published = published === 'true';
+    if (published !== undefined && published !== '') filter.published = published === 'true';
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const sortOrder = order === 'asc' ? 1 : -1;
@@ -64,6 +64,13 @@ export const getAllEvents = async (req, res) => {
         };
       })
     );
+
+    // Set no-cache headers to prevent stale data
+    res.set({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
 
     res.json({
       success: true,

@@ -47,7 +47,6 @@ const Registrations = () => {
       setLoading(true);
       const response = await axios.get(`${window.location.origin.includes('localhost') ? 'http://localhost:5000' : 'https://gdg-backend-ten.vercel.app'}/api/admin/registrations`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-        headers: { Authorization: `Bearer ${token}` },
         params: {
           page: pagination.page,
           limit: pagination.limit,
@@ -67,11 +66,11 @@ const Registrations = () => {
 
   const handleApprove = async (registrationId) => {
     try {
-      const token = localStorage.getItem('token');
+      const API_URL = window.location.origin.includes('localhost') ? 'http://localhost:5000' : 'https://gdg-backend-ten.vercel.app';
       await axios.patch(
-        `http://localhost:5000/api/admin/registrations/${registrationId}/approve`,
+        `${API_URL}/api/admin/registrations/${registrationId}/approve`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
       );
       fetchRegistrations();
     } catch (error) {
@@ -82,11 +81,11 @@ const Registrations = () => {
   const handleReject = async (registrationId) => {
     const reason = prompt('Enter rejection reason (optional):');
     try {
-      const token = localStorage.getItem('token');
+      const API_URL = window.location.origin.includes('localhost') ? 'http://localhost:5000' : 'https://gdg-backend-ten.vercel.app';
       await axios.patch(
-        `http://localhost:5000/api/admin/registrations/${registrationId}/reject`,
+        `${API_URL}/api/admin/registrations/${registrationId}/reject`,
         { reason },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
       );
       fetchRegistrations();
     } catch (error) {
@@ -101,11 +100,11 @@ const Registrations = () => {
     }
 
     try {
-      const token = localStorage.getItem('token');
+      const API_URL = window.location.origin.includes('localhost') ? 'http://localhost:5000' : 'https://gdg-backend-ten.vercel.app';
       await axios.post(
-        'http://localhost:5000/api/admin/registrations/bulk-approve',
+        `${API_URL}/api/admin/registrations/bulk-approve`,
         { registrationIds: selectedRegistrations },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
       );
       setSelectedRegistrations([]);
       fetchRegistrations();
@@ -116,11 +115,11 @@ const Registrations = () => {
 
   const handleMarkAttendance = async (registrationId, attended) => {
     try {
-      const token = localStorage.getItem('token');
+      const API_URL = window.location.origin.includes('localhost') ? 'http://localhost:5000' : 'https://gdg-backend-ten.vercel.app';
       await axios.patch(
-        `http://localhost:5000/api/admin/registrations/${registrationId}/attendance`,
+        `${API_URL}/api/admin/registrations/${registrationId}/attendance`,
         { attended },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
       );
       fetchRegistrations();
     } catch (error) {
@@ -130,9 +129,9 @@ const Registrations = () => {
 
   const handleExport = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/admin/registrations/export', {
-        headers: { Authorization: `Bearer ${token}` },
+      const API_URL = window.location.origin.includes('localhost') ? 'http://localhost:5000' : 'https://gdg-backend-ten.vercel.app';
+      const response = await axios.get(`${API_URL}/api/admin/registrations/export`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         params: { eventId: selectedEvent },
         responseType: 'blob'
       });

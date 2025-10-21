@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - Admin Events</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #4285F4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #3367D6;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #4285F4;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 GDG Admin Events API Test</h1>
+        <p>This page tests the admin events API endpoint to debug why events aren't showing.</p>
+        
+        <div style="margin: 20px 0;">
+            <button onclick="testAPI()">🚀 Test API</button>
+            <button onclick="checkToken()">🔑 Check Token</button>
+            <button onclick="clearCache()">🗑️ Clear Cache</button>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000';
+        const resultDiv = document.getElementById('result');
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'blue';
+            resultDiv.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+        }
+
+        function checkToken() {
+            resultDiv.innerHTML = '';
+            const token = localStorage.getItem('token');
+            if (token) {
+                log('✅ Token found in localStorage', 'success');
+                log(`Token preview: ${token.substring(0, 50)}...`, 'info');
+                
+                // Decode JWT to check expiry
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    log(`User ID: ${payload.id}`, 'info');
+                    log(`Role: ${payload.role || 'N/A'}`, 'info');
+                    const expDate = new Date(payload.exp * 1000);
+                    log(`Expires: ${expDate.toLocaleString()}`, 'info');
+                    
+                    if (Date.now() > payload.exp * 1000) {
+                        log('⚠️ TOKEN EXPIRED!', 'error');
+                    } else {
+                        log('✅ Token is still valid', 'success');
+                    }
+                } catch (e) {
+                    log('⚠️ Could not decode token', 'error');
+                }
+            } else {
+                log('❌ No token found in localStorage', 'error');
+                log('You need to login first!', 'error');
+            }
+        }
+
+        async function testAPI() {
+            resultDiv.innerHTML = '';
+            log('🚀 Starting API test...', 'info');
+            
+            const token = localStorage.getItem('token');
+            if (!token) {
+                log('❌ No token found! Please login first.', 'error');
+                return;
+            }
+
+            log(`📡 Making request to: ${API_URL}/api/admin/events`, 'info');
+            log('📋 Parameters: page=1, limit=20', 'info');
+
+            try {
+                const response = await fetch(`${API_URL}/api/admin/events?page=1&limit=20&search=&type=&mode=&published=`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    }
+                });
+
+                log(`📨 Response status: ${response.status} ${response.statusText}`, 'info');
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    log(`❌ Error response: ${errorText}`, 'error');
+                    return;
+                }
+
+                const data = await response.json();
+                log('✅ Response received successfully!', 'success');
+                log('─'.repeat(80), 'info');
+                log(JSON.stringify(data, null, 2), 'info');
+                log('─'.repeat(80), 'info');
+                
+                if (data.events) {
+                    log(`📊 Total events in response: ${data.events.length}`, 'success');
+                    log(`📈 Total count from pagination: ${data.pagination?.total || 0}`, 'success');
+                    
+                    if (data.events.length > 0) {
+                        log('\n📝 First event:', 'info');
+                        log(JSON.stringify(data.events[0], null, 2), 'info');
+                    } else {
+                        log('⚠️ Events array is empty!', 'error');
+                    }
+                } else {
+                    log('❌ No events property in response!', 'error');
+                }
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+                log(`Stack: ${error.stack}`, 'error');
+            }
+        }
+
+        function clearCache() {
+            resultDiv.innerHTML = '';
+            log('🗑️ Clearing browser cache...', 'info');
+            
+            // Clear localStorage (except token)
+            const token = localStorage.getItem('token');
+            localStorage.clear();
+            if (token) localStorage.setItem('token', token);
+            
+            log('✅ Cache cleared!', 'success');
+            log('💡 Now refresh the page with Ctrl+Shift+R', 'info');
+        }
+
+        // Auto-check token on load
+        window.onload = () => {
+            log('🔍 Page loaded. Checking for token...', 'info');
+            checkToken();
+        };
+    </script>
+</body>
+</html>

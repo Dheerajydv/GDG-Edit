@@ -35,6 +35,16 @@ const Events = () => {
   const fetchEvents = async () => {
     try {
       setLoading(true);
+      console.log('🔍 Fetching events from:', `${API_BASE_URL}/api/admin/events`);
+      console.log('📋 Params:', {
+        page: pagination.page,
+        limit: pagination.limit,
+        search: searchTerm,
+        type: filterType,
+        mode: filterMode,
+        published: filterPublished
+      });
+      
       const response = await axios.get(`${API_BASE_URL}/api/admin/events`, {
         headers: getAuthHeaders(),
         params: {
@@ -46,10 +56,17 @@ const Events = () => {
           published: filterPublished
         }
       });
-      setEvents(response.data.events);
-      setPagination(prev => ({ ...prev, total: response.data.pagination.total }));
+      
+      console.log('✅ Response received:', response.data);
+      console.log('📊 Events count:', response.data.events?.length);
+      console.log('📈 Total from API:', response.data.pagination?.total);
+      
+      setEvents(response.data.events || []);
+      setPagination(prev => ({ ...prev, total: response.data.pagination?.total || 0 }));
     } catch (error) {
-      console.error('Failed to fetch events:', error);
+      console.error('❌ Failed to fetch events:', error);
+      console.error('Error details:', error.response?.data);
+      console.error('Status code:', error.response?.status);
     } finally {
       setLoading(false);
     }

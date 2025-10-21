@@ -46,6 +46,13 @@ export const getAllRegistrations = async (req, res) => {
 
     const total = await Registration.countDocuments(filter);
 
+    // Set no-cache headers to prevent stale data
+    res.set({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
+
     res.json({
       success: true,
       registrations,
