@@ -1,6 +1,7 @@
 import React from 'react'
 import "../styles/Logo.css"
 import styled from 'styled-components'
+import { useTheme } from '../contexts/ThemeContext'
 
 const LogoContainer = styled.a`
   width: fit-content;
@@ -58,6 +59,10 @@ const MobileText = styled.span`
   @media (max-width: 768px) {
     display: inline-block; /* show "GDG" text on mobile */
   }
+  
+  @media (min-width: 769px) {
+    display: none; /* hide "GDG" text on desktop */
+  }
 `
 
 const MainText = styled.span`
@@ -104,10 +109,13 @@ const SubText = styled.span`
 `
 
 export default function Logo() {
+  const { isDarkTheme } = useTheme();
+  const logoSrc = isDarkTheme ? '/gdg_logo.png' : '/gdg_logo2.png';
+
   return (
     <LogoContainer href='/' className='logo'>
       <LogoImage 
-        src="/gdg_logo.png" 
+        src={logoSrc}
         alt="GDG Logo"
       />
       <LogoText>

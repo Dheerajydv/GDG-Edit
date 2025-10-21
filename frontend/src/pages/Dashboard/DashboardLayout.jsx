@@ -112,6 +112,10 @@ const MobileText = styled.span`
   @media (max-width: 768px) {
     display: inline-block; /* show "GDG" text on mobile */
   }
+  
+  @media (min-width: 769px) {
+    display: none; /* hide "GDG" text on desktop */
+  }
 `;
 
 const CloseButton = styled.button`
@@ -367,7 +371,6 @@ const DashboardLayout = () => {
           <Logo onClick={() => navigate('/')}> 
             <LogoImage src="/gdg_logo.png" alt="GDG Logo" />
             <span>GDG MMMUT</span>
-            <MobileText>GDG</MobileText>
           </Logo>
           <CloseButton onClick={toggleSidebar}>
             <FiX />

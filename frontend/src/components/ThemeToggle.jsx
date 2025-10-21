@@ -13,10 +13,11 @@ const ToggleButton = styled(motion.button)`
   border-radius: 50%;
   cursor: pointer;
   color: ${({ theme }) => theme.colors.text.primary};
-  background-color: ${({ theme }) => theme.colors.background.secondary};
+  background-color: transparent; /* transparent background */
+  border: none;
   
   &:hover {
-    background-color: ${({ theme }) => theme.colors.background.tertiary};
+    background-color: rgba(255, 255, 255, 0.1); /* subtle hover effect */
     @media (max-width:768px) {
       height: 2rem;
       width: 2rem;
@@ -37,7 +38,7 @@ const ThemeToggle = () => {
       transition={{ duration: 0.5 }}
       aria-label={isDarkTheme ? 'Switch to light mode' : 'Switch to dark mode'}
     >
-      {isDarkTheme ? <FaSun size={13} /> : <Moon size={13} />}
+      {isDarkTheme ? <FaSun size={20} /> : <Moon size={20} />}
     </ToggleButton>
   );
 };

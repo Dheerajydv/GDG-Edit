@@ -11,8 +11,44 @@ const LoadingContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
+  background: #000000; /* solid black background */
   color: white;
+
+  /* animated subtle circles backdrop */
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(60,60,60,0.25), rgba(60,60,60,0.08) 60%, transparent 70%);
+    filter: blur(2px);
+    animation: floatCircle 14s ease-in-out infinite;
+  }
+
+  &::before {
+    width: 520px;
+    height: 520px;
+    top: -120px;
+    left: -120px;
+    opacity: 0.25; /* low opacity */
+  }
+
+  &::after {
+    width: 680px;
+    height: 680px;
+    bottom: -180px;
+    right: -160px;
+    opacity: 0.18; /* even subtler */
+    animation-delay: 2.5s;
+  }
+
+  @keyframes floatCircle {
+    0% { transform: translate3d(0,0,0) scale(1); }
+    50% { transform: translate3d(10px, -12px, 0) scale(1.05); }
+    100% { transform: translate3d(0,0,0) scale(1); }
+  }
 `;
 
 const Spinner = styled.div`

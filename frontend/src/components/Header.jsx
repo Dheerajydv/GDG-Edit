@@ -202,26 +202,12 @@ const Header = () => {
         {/* Mobile-only actions inside slideout */}
         {!isAuthenticated && (
           <Link to="/auth" onClick={closeMenu}>
-            <Button style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>SignIn/SignUp</Button>
+            <Button style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>SignIn</Button>
           </Link>
         )}
-        <div style={{ marginTop: 8 }}>
-          <ThemeToggle toggle={toggleTheme} />
-        </div>
       </Nav>
 
       <NavActions>
-        {!isAuthenticated && (
-          <Link to="/auth">
-            <Button
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >SignIn/SignUp</Button>
-          </Link>
-        )}
         <ThemeToggle toggle={toggleTheme} />
       </NavActions>
     </HeaderContainer>
