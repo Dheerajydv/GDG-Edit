@@ -32,31 +32,31 @@ const AdminDashboard = () => {
   const statsCards = [
     {
       title: 'Total Users',
-      value: stats?.totalUsers || 0,
+      value: stats?.stats?.totalUsers?.count || 0,
       icon: Users,
       color: '#4285f4',
-      growth: stats?.userGrowth || 0
+      growth: stats?.stats?.totalUsers?.change || 0
     },
     {
       title: 'Total Events',
-      value: stats?.totalEvents || 0,
+      value: stats?.stats?.activeEvents?.total || 0,
       icon: Calendar,
       color: '#ea4335',
-      growth: stats?.eventGrowth || 0
+      growth: 0
     },
     {
       title: 'Pending Registrations',
-      value: stats?.pendingRegistrations || 0,
+      value: stats?.stats?.pendingRegistrations?.count || 0,
       icon: ClipboardCheck,
       color: '#fbbc04',
       growth: 0
     },
     {
       title: 'Certificates Issued',
-      value: stats?.certificatesThisMonth || 0,
+      value: stats?.stats?.certificatesIssued?.count || 0,
       icon: Award,
       color: '#34a853',
-      growth: stats?.certificateGrowth || 0
+      growth: 0
     }
   ];
 
@@ -93,15 +93,15 @@ const AdminDashboard = () => {
           <InfoList>
             <InfoItem>
               <InfoLabel>Active Events</InfoLabel>
-              <InfoValue>{stats?.activeEvents || 0}</InfoValue>
+              <InfoValue>{stats?.stats?.activeEvents?.count || 0}</InfoValue>
             </InfoItem>
             <InfoItem>
               <InfoLabel>New Users This Week</InfoLabel>
-              <InfoValue>{stats?.newUsersThisWeek || 0}</InfoValue>
+              <InfoValue>{stats?.stats?.newUsersThisWeek?.count || 0}</InfoValue>
             </InfoItem>
             <InfoItem>
               <InfoLabel>Certificates This Month</InfoLabel>
-              <InfoValue>{stats?.certificatesThisMonth || 0}</InfoValue>
+              <InfoValue>{stats?.stats?.certificatesIssued?.count || 0}</InfoValue>
             </InfoItem>
           </InfoList>
         </InfoCard>

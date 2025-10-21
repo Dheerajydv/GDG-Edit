@@ -233,22 +233,36 @@ const Events = () => {
                   </EventStats>
 
                   <EventActions>
-                    <ActionButton onClick={() => window.location.href = `/admin/events/${event._id}`}>
+                    <ActionButton 
+                      onClick={() => window.location.href = `/admin/events/${event._id}`}
+                      title="View Event Details"
+                    >
                       <Eye size={16} />
                     </ActionButton>
-                    <ActionButton onClick={() => window.location.href = `/admin/events/${event._id}/edit`}>
+                    <ActionButton 
+                      onClick={() => window.location.href = `/admin/events/${event._id}/edit`}
+                      title="Edit Event"
+                    >
                       <Edit size={16} />
                     </ActionButton>
-                    <ActionButton onClick={() => handleDuplicate(event._id)}>
+                    <ActionButton 
+                      onClick={() => handleDuplicate(event._id)}
+                      title="Duplicate Event"
+                    >
                       <Copy size={16} />
                     </ActionButton>
                     <ActionButton 
                       $primary={!event.published}
                       onClick={() => handleTogglePublish(event._id, event.published)}
+                      title={event.published ? "Unpublish Event" : "Publish Event"}
                     >
                       {event.published ? <XCircle size={16} /> : <CheckCircle size={16} />}
                     </ActionButton>
-                    <ActionButton $danger onClick={() => handleDelete(event._id)}>
+                    <ActionButton 
+                      $danger 
+                      onClick={() => handleDelete(event._id)}
+                      title="Delete Event"
+                    >
                       <Trash2 size={16} />
                     </ActionButton>
                   </EventActions>
@@ -299,22 +313,45 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
 `;
 
 const Title = styled.h1`
   font-size: 28px;
   font-weight: bold;
   color: #333;
+
+  @media (max-width: 768px) {
+    font-size: 24px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 20px;
+  }
 `;
 
 const Subtitle = styled.p`
   font-size: 14px;
   color: #666;
   margin-top: 4px;
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
 `;
 
 const CreateButton = styled.button`
   display: flex;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: center;
+  }
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
@@ -370,6 +407,17 @@ const Select = styled.select`
   border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
 `;
 
 const LoadingContainer = styled.div`
@@ -383,6 +431,16 @@ const EventsGrid = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 24px;
   margin-bottom: 24px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
 `;
 
 const EventCard = styled.div`
@@ -434,6 +492,10 @@ const PublishBadge = styled.div`
 
 const EventContent = styled.div`
   padding: 16px;
+
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
 `;
 
 const EventHeader = styled.div`
@@ -468,6 +530,11 @@ const EventTitle = styled.h3`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+
+  @media (max-width: 480px) {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
 `;
 
 const EventMeta = styled.div`
@@ -504,10 +571,20 @@ const StatItem = styled.div`
 const EventActions = styled.div`
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    gap: 6px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 4px;
+  }
 `;
 
 const ActionButton = styled.button`
   flex: 1;
+  min-width: 40px;
   padding: 8px;
   background: ${props => props.$danger ? '#fee' : props.$primary ? '#e3f2fd' : 'white'};
   border: 1px solid ${props => props.$danger ? '#ea4335' : props.$primary ? '#4285f4' : '#ddd'};
@@ -523,6 +600,27 @@ const ActionButton = styled.button`
     background: ${props => props.$danger ? '#ea4335' : props.$primary ? '#4285f4' : '#f5f5f5'};
     color: ${props => props.$danger || props.$primary ? 'white' : '#333'};
   }
+
+  @media (max-width: 768px) {
+    padding: 10px 8px;
+    min-width: 44px;
+    
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 12px 8px;
+    min-width: 48px;
+    flex: 0 1 calc(20% - 4px);
+    
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
 `;
 
 const Pagination = styled.div`
@@ -532,16 +630,34 @@ const Pagination = styled.div`
   padding: 16px;
   background: white;
   border-radius: 8px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+  }
 `;
 
 const PaginationInfo = styled.div`
   font-size: 14px;
   color: #666;
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+  }
 `;
 
 const PaginationButtons = styled.div`
   display: flex;
   gap: 8px;
+
+  @media (max-width: 480px) {
+    width: 100%;
+    
+    button {
+      flex: 1;
+    }
+  }
 `;
 
 const PageButton = styled.button`

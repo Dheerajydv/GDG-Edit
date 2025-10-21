@@ -31,6 +31,8 @@ const AdminLayout = lazy(() => import('./pages/Admin/AdminLayout'));
 const AdminDashboard = lazy(() => import('./pages/Admin/Dashboard'));
 const AdminUsers = lazy(() => import('./pages/Admin/Users'));
 const AdminEvents = lazy(() => import('./pages/Admin/Events'));
+const EventDetails = lazy(() => import('./pages/Admin/EventDetails'));
+const EditEvent = lazy(() => import('./pages/Admin/EditEvent'));
 const AdminRegistrations = lazy(() => import('./pages/Admin/Registrations'));
 const AdminNotifications = lazy(() => import('./pages/Admin/Notifications'));
 
@@ -79,6 +81,8 @@ function App() {
                <Route index element={<AdminDashboard />} />
                <Route path="users" element={<AdminUsers />} />
                <Route path="events" element={<AdminEvents />} />
+               <Route path="events/:id" element={<EventDetails />} />
+               <Route path="events/:id/edit" element={<EditEvent />} />
                <Route path="registrations" element={<AdminRegistrations />} />
                <Route path="notifications" element={<AdminNotifications />} />
                <Route path="certificates" element={<div style={{padding: '24px'}}>Certificates - Coming Soon</div>} />
